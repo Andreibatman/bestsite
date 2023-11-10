@@ -1,3 +1,55 @@
+<?php
+  require_once "php/config.php";
+  if(isset($_POST['submit'])){
+    echo ("mergi");
+    $sql = "SELECT * FROM posts where 'name' like $name"; #and 'address' like $address and 'price' like $price and 'type' like $type and 'bathroom' like $bathroom and 'bedroom' like $bedroom";
+    if($result = mysqli_query($link, $sql)){
+        if(mysqli_num_rows($result) > 0){
+            echo '<table class="table table-bordered table-striped">';
+                echo "<thead>";
+                    echo "<tr>";
+                        echo "<th>#</th>";
+                        echo "<th>Name</th>";
+                        echo "<th>Address</th>";
+                        echo "<th>Price</th>";
+                        echo "<th>Image</th>";
+                        echo "<th>Type</th>";
+                        echo "<th>Bathrooms</th>";
+                        echo "<th>Bedrooms</th>";
+                        
+                    echo "</tr>";
+                echo "</thead>";
+                echo "<tbody>";
+                while($row = mysqli_fetch_array($result)){
+                    echo "<tr>";
+                        echo "<td>" . $row['id'] . "</td>";
+                        echo "<td>" . $row['name'] . "</td>";
+                        echo "<td>" . $row['address'] . "</td>";
+                        echo "<td>" . $row['price'] . "</td>";
+                        echo "<td>" . $row['image'] . "</td>";
+                        echo "<td>" . $row['type'] . "</td>";
+                        echo "<td>" . $row['bathroom'] . "</td>";
+                        echo "<td>" . $row['bedroom'] . "</td>";
+                        
+                    echo "</tr>";
+                }
+                echo "</tbody>";                            
+            echo "</table>";
+            // Free result set
+            mysqli_free_result($result);
+        } else{
+            echo '<div class="alert alert-danger"><em>No records were found.</em></div>';
+        }
+    } else{
+        echo "Oops! Something went wrong. Please try again later.";
+    }
+ 
+                    // Close connection
+                    mysqli_close($link);
+  }
+?>
+
+
 <!doctype html>
 <html lang="en">
 
@@ -46,7 +98,11 @@
 
             <div class="col-3 ">
               <div class="site-logo">
-                <a href="index.html">DreamHouse</a>
+                <a href="index.php">DreamHouse</a>
+                <a href="php/register.php">Register</a>
+                <a href="php/login.php">Log In</a>
+                <a href="php/logout.php">Log Out</a>
+                <a href="php/dashboard.php">Dashboard</a>
               </div>
             </div>
 
@@ -59,12 +115,12 @@
 
               <nav class="site-navigation text-right ml-auto d-none d-lg-block" role="navigation">
                 <ul class="site-menu main-menu js-clone-nav ml-auto ">
-                  <li class="active"><a href="index.html" class="nav-link">Home</a></li>
-                  <li><a href="agents.html" class="nav-link">Agents</a></li>
-                  <li><a href="property.html" class="nav-link">Property</a></li>
-                  <li><a href="about.html" class="nav-link">About</a></li>
-                  <li><a href="blog.html" class="nav-link">Blog</a></li>
-                  <li><a href="contact.html" class="nav-link">Contact</a></li>
+                  <li class="active"><a href="index.php" class="nav-link">Home</a></li>
+                  <li><a href="agents.php" class="nav-link">Agents</a></li>
+                  <li><a href="property.php" class="nav-link">Property</a></li>
+                  <li><a href="about.php" class="nav-link">About</a></li>
+                  <li><a href="blog.php" class="nav-link">Blog</a></li>
+                  <li><a href="contact.php" class="nav-link">Contact</a></li>
                 </ul>
               </nav>
             </div>
@@ -99,7 +155,7 @@
     
     
 
-    <form action="">
+    <form method = "POST" action="index.php">
       <div class="realestate-filter">
         <div class="container">
           <div class="realestate-filter-wrap nav">
@@ -115,12 +171,12 @@
 
              <div class="row">
                <div class="col-md-4 form-group">
-                 <select name="" id="" class="form-control w-100">
-                   <option value="">All Types</option>
-                   <option value="">Townhouses</option>
-                   <option value="">Duplexes</option>
-                   <option value="">Quadplexes</option>
-                   <option value="">Condominiums</option>
+                 <select name="type" id="" class="form-control w-100">
+                   <option value="All Types">All Types</option>
+                   <option value="Townhouses">Townhouses</option>
+                   <option value="Duplexes">Duplexes</option>
+                   <option value="Quadplexes">Quadplexes</option>
+                   <option value="Condominiums">Condominiums</option>
                  </select>
                </div>
                <div class="col-md-4 form-group">
@@ -133,126 +189,87 @@
 
              <div class="row">
                <div class="col-md-4 form-group">
-                 <select name="" id="" class="form-control w-100">
-                   <option value="">Any Bedrooms</option>
-                   <option value="">0</option>
-                   <option value="">1</option>
-                   <option value="">2</option>
-                   <option value="">3+</option>
+                 <select name="bedroom" id="" class="form-control w-100">
+                   <option value="Any Bedrooms">Any Bedrooms</option>
+                   <option value="0">0</option>
+                   <option value="1">1</option>
+                   <option value="2">2</option>
+                   <option value="3+">3+</option>
                  </select>
                </div>
                <div class="col-md-4 form-group">
-                 <select name="" id="" class="form-control w-100">
-                   <option value="">Any Bathrooms</option>
-                   <option value="">0</option>
-                   <option value="">1</option>
-                   <option value="">2</option>
-                   <option value="">3+</option>
+                 <select name="bathroom" id="" class="form-control w-100">
+                   <option value="Any Bathrooms">Any Bathrooms</option>
+                   <option value="0">0</option>
+                   <option value="1">1</option>
+                   <option value="2">2</option>
+                   <option value="3+">3+</option>
                  </select>
-               </div>
-               <div class="col-md-4 form-group">
-                 <div class="row">
-                   <div class="col-md-6 form-group">
-                     <select name="" id="" class="form-control w-100">
-                       <option value="">Min Price</option>
-                       <option value="">$100</option>
-                       <option value="">$200</option>
-                       <option value="">$300</option>
-                       <option value="">$400</option>
-                     </select>
-                   </div>
-                   <div class="col-md-6">
-                     <select name="" id="" class="form-control w-100">
-                       <option value="">Max Price</option>
-                       <option value="">$25,000</option>
-                       <option value="">$50,000</option>
-                       <option value="">$75,000</option>
-                       <option value="">$100,000</option>
-                       <option value="">$100,000,000</option>
-                     </select>
-                   </div>
-                 </div>
-               </div>
+               </div>   
+                <div class="col-md-4 form-group">
+                  <input type="text" class="form-control" placeholder="Price">
+                </div>  
              </div>
              <div class="row">
                <div class="col-md-4">
                  <input type="submit" class="btn btn-black py-3 btn-block" value="Submit">
                </div>
              </div>
-
-           </div>
-           <div class="tab-pane" id="for-sale" role="tabpanel" aria-labelledby="sale-tab">
-             <div class="row">
-               <div class="col-md-4 form-group">
-                 <select name="" id="" class="form-control w-100">
-                   <option value="">All Types</option>
-                   <option value="">Townhouses</option>
-                   <option value="">Duplexes</option>
-                   <option value="">Quadplexes</option>
-                   <option value="">Condominiums</option>
-                 </select>
-               </div>
-               <div class="col-md-4 form-group">
-                 <input type="text" class="form-control" placeholder="Title">
-               </div>
-               <div class="col-md-4 form-group">
-                 <input type="text" class="form-control" placeholder="Address">
-               </div>
-             </div>
-
-             <div class="row">
-               <div class="col-md-4 form-group">
-                 <select name="" id="" class="form-control w-100">
-                   <option value="">Any Bedrooms</option>
-                   <option value="">0</option>
-                   <option value="">1</option>
-                   <option value="">2</option>
-                   <option value="">3+</option>
-                 </select>
-               </div>
-               <div class="col-md-4 form-group">
-                 <select name="" id="" class="form-control w-100">
-                   <option value="">Any Bathrooms</option>
-                   <option value="">0</option>
-                   <option value="">1</option>
-                   <option value="">2</option>
-                   <option value="">3+</option>
-                 </select>
-               </div>
-               <div class="col-md-4 form-group">
-                 <div class="row">
-                   <div class="col-md-6 form-group">
-                     <select name="" id="" class="form-control w-100">
-                       <option value="">Min Price</option>
-                       <option value="">$100</option>
-                       <option value="">$200</option>
-                       <option value="">$300</option>
-                       <option value="">$400</option>
-                     </select>
-                   </div>
-                   <div class="col-md-6">
-                     <select name="" id="" class="form-control w-100">
-                       <option value="">Max Price</option>
-                       <option value="">$25,000</option>
-                       <option value="">$50,000</option>
-                       <option value="">$75,000</option>
-                       <option value="">$100,000</option>
-                       <option value="">$100,000,000</option>
-                     </select>
-                   </div>
-                 </div>
-               </div>
-             </div>
-             <div class="row">
-               <div class="col-md-4">
-                 <input type="submit" class="btn btn-black py-3 btn-block" value="Submit">
-               </div>
-             </div>
-
+            </div>
            </div>
         </div>
       </div>
     </form>
+
+    <div>
+      <h6>Posts List</h6>
+      <hr>
+      <?php 
+        if(isset($_POST['Submit'])){
+          echo ("mergi");
+          $sql = "SELECT * FROM posts"; #and 'address' like $address and 'price' like $price and 'type' like $type and 'bathroom' like $bathroom and 'bedroom' like $bedroom";
+          foreach ($sql as $post)          
+            if($post['name']==$name)
+              echo $name;
+          #if($result = mysqli_query($link, $sql)){
+          #    if(mysqli_num_rows($result) > 0){
+        //           echo '<table class="table table-bordered table-striped">';
+        //               echo "<thead>";
+        //                   echo "<tr>";
+        //                       echo "<th>#</th>";
+        //                       echo "<th>Name</th>";
+        //                       echo "<th>Address</th>";
+        //                       echo "<th>Price</th>";
+        //                       echo "<th>Image</th>";
+        //                       echo "<th>Type</th>";
+        //                       echo "<th>Bathrooms</th>";
+        //                       echo "<th>Bedrooms</th>";
+                              
+        //                   echo "</tr>";
+        //               echo "</thead>";
+        //               echo "<tbody>";
+        //               while($row = mysqli_fetch_array($result)){
+        //                   echo "<tr>";
+        //                       echo "<td>" . $row['id'] . "</td>";
+        //                       echo "<td>" . $row['name'] . "</td>";
+        //                       echo "<td>" . $row['address'] . "</td>";
+        //                       echo "<td>" . $row['price'] . "</td>";
+        //                       echo "<td>" . $row['image'] . "</td>";
+        //                       echo "<td>" . $row['type'] . "</td>";
+        //                       echo "<td>" . $row['bathroom'] . "</td>";
+        //                       echo "<td>" . $row['bedroom'] . "</td>";
+                              
+        //                   echo "</tr>";
+        //               }
+        //               echo "</tbody>";                            
+        //           echo "</table>";
+        //           // Free result set
+        //           mysqli_free_result($result);
+        //       }
+        //   }
+         }
+      ?>
+    </div>
 
     <div class="site-section">
       <div class="container">
@@ -333,7 +350,7 @@
 
         <div class="owl-carousel nonloop-block-14">
           <div class="media-38289">
-            <a href="property-single.html" class="d-block"><img src="images/img_1.jpg" alt="Image" class="img-fluid"></a>
+            <a href="property-single.php" class="d-block"><img src="images/img_1.jpg" alt="Image" class="img-fluid"></a>
             <div class="text">
               <div class="d-flex justify-content-between mb-3">
                 <div class="sq d-flex align-items-center"><span class="wrap-icon icon-fullscreen
@@ -347,7 +364,7 @@
           </div>
 
           <div class="media-38289">
-            <a href="property-single.html" class="d-block"><img src="images/img_2.jpg" alt="Image" class="img-fluid"></a>
+            <a href="property-single.php" class="d-block"><img src="images/img_2.jpg" alt="Image" class="img-fluid"></a>
             <div class="text">
               <div class="d-flex justify-content-between mb-3">
                 <div class="sq d-flex align-items-center"><span class="wrap-icon icon-fullscreen
@@ -361,7 +378,7 @@
           </div>
 
           <div class="media-38289">
-              <a href="property-single.html" class="d-block"><img src="images/img_3.jpg" alt="Image" class="img-fluid"></a>
+              <a href="property-single.php" class="d-block"><img src="images/img_3.jpg" alt="Image" class="img-fluid"></a>
               <div class="text">
                 <div class="d-flex justify-content-between mb-3">
                   <div class="sq d-flex align-items-center"><span class="wrap-icon icon-fullscreen
@@ -376,7 +393,7 @@
 
 
           <div class="media-38289">
-            <a href="property-single.html" class="d-block"><img src="images/img_1.jpg" alt="Image" class="img-fluid"></a>
+            <a href="property-single.php" class="d-block"><img src="images/img_1.jpg" alt="Image" class="img-fluid"></a>
             <div class="text">
               <div class="d-flex justify-content-between mb-3">
                 <div class="sq d-flex align-items-center"><span class="wrap-icon icon-fullscreen
@@ -390,7 +407,7 @@
           </div>
 
           <div class="media-38289">
-            <a href="property-single.html" class="d-block"><img src="images/img_2.jpg" alt="Image" class="img-fluid"></a>
+            <a href="property-single.php" class="d-block"><img src="images/img_2.jpg" alt="Image" class="img-fluid"></a>
             <div class="text">
               <div class="d-flex justify-content-between mb-3">
                 <div class="sq d-flex align-items-center"><span class="wrap-icon icon-fullscreen
@@ -404,7 +421,7 @@
           </div>
 
           <div class="media-38289">
-              <a href="property-single.html" class="d-block"><img src="images/img_3.jpg" alt="Image" class="img-fluid"></a>
+              <a href="property-single.php" class="d-block"><img src="images/img_3.jpg" alt="Image" class="img-fluid"></a>
               <div class="text">
                 <div class="d-flex justify-content-between mb-3">
                   <div class="sq d-flex align-items-center"><span class="wrap-icon icon-fullscreen
@@ -547,13 +564,13 @@
           
           <div class="col-lg-4 col-md-6 mb-4">
             <div class="post-entry-1 h-100">
-              <a href="single.html">
+              <a href="single.php">
                 <img src="images/img_1.jpg" alt="Image"
                  class="img-fluid">
               </a>
               <div class="post-entry-1-contents">
                 
-                <h2><a href="single.html">Lorem ipsum dolor sit amet</a></h2>
+                <h2><a href="single.php">Lorem ipsum dolor sit amet</a></h2>
                 <span class="meta d-inline-block mb-3">July 17, 2019 <span class="mx-2">by</span> <a href="#">Admin</a></span>
                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolores eos soluta, dolore harum molestias consectetur.</p>
               </div>
@@ -561,13 +578,13 @@
           </div>
           <div class="col-lg-4 col-md-6 mb-4">
             <div class="post-entry-1 h-100">
-              <a href="single.html">
+              <a href="single.php">
                 <img src="images/img_2.jpg" alt="Image"
                  class="img-fluid">
               </a>
               <div class="post-entry-1-contents">
                 
-                <h2><a href="single.html">Lorem ipsum dolor sit amet</a></h2>
+                <h2><a href="single.php">Lorem ipsum dolor sit amet</a></h2>
                 <span class="meta d-inline-block mb-3">July 17, 2019 <span class="mx-2">by</span> <a href="#">Admin</a></span>
                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolores eos soluta, dolore harum molestias consectetur.</p>
               </div>
@@ -576,13 +593,13 @@
 
           <div class="col-lg-4 col-md-6 mb-4">
             <div class="post-entry-1 h-100">
-              <a href="single.html">
+              <a href="single.php">
                 <img src="images/img_3.jpg" alt="Image"
                  class="img-fluid">
               </a>
               <div class="post-entry-1-contents">
                 
-                <h2><a href="single.html">Lorem ipsum dolor sit amet</a></h2>
+                <h2><a href="single.php">Lorem ipsum dolor sit amet</a></h2>
                 <span class="meta d-inline-block mb-3">July 17, 2019 <span class="mx-2">by</span> <a href="#">Admin</a></span>
                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolores eos soluta, dolore harum molestias consectetur.</p>
               </div>

@@ -46,7 +46,7 @@
 
             <div class="col-3 ">
               <div class="site-logo">
-                <a href="index.html">DreamHouse</a>
+                <a href="index.php">DreamHouse</a>
               </div>
             </div>
 
@@ -59,12 +59,12 @@
 
               <nav class="site-navigation text-right ml-auto d-none d-lg-block" role="navigation">
                 <ul class="site-menu main-menu js-clone-nav ml-auto ">
-                  <li><a href="index.html" class="nav-link">Home</a></li>
-                  <li><a href="agents.html" class="nav-link">Agents</a></li>
-                  <li class="active"><a href="property.html" class="nav-link">Property</a></li>
-                  <li><a href="about.html" class="nav-link">About</a></li>
-                  <li><a href="blog.html" class="nav-link">Blog</a></li>
-                  <li><a href="contact.html" class="nav-link">Contact</a></li>
+                  <li><a href="index.php" class="nav-link">Home</a></li>
+                  <li><a href="agents.php" class="nav-link">Agents</a></li>
+                  <li class="active"><a href="property.php" class="nav-link">Property</a></li>
+                  <li><a href="about.php" class="nav-link">About</a></li>
+                  <li><a href="blog.php" class="nav-link">Blog</a></li>
+                  <li><a href="contact.php" class="nav-link">Contact</a></li>
                 </ul>
               </nav>
             </div>
@@ -80,16 +80,8 @@
         <div class="container">
           <div class="row align-items-center justify-content-center text-center">
             <div class="col-md-7">
-              <span class="h4 text-primary mb-4 d-block">$1,570,000</span>
-              <h1 class="mb-2">Beautiful House In Australia</h1>
-              <p class="text-center mb-5"><span class="small address d-flex align-items-center justify-content-center"> <span class="icon-room mr-3 text-primary"></span> <span>156/10 Sapling Street, Harrison, ACT 2914</span></span></p>
-            
-                <div class="d-flex media-38289 justify-content-around mb-5">
-                  <div class="sq d-flex align-items-center"><span class="wrap-icon icon-fullscreen"></span> <span>2911 Sq Ft.</span></div>
-                  <div class="bed d-flex align-items-center"><span class="wrap-icon icon-bed"></span> <span>2.</span></div>
-                  <div class="bath d-flex align-items-center"><span class="wrap-icon icon-bath"></span> <span>2</span></div>
-                </div>
-              <p><a href="#" class="btn btn-primary text-white px-4 py-3">Buy Now</a></p>
+              <h1 class="mb-2">Our Properties</h1>
+              <p class="text-white">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta cupiditate ipsum porro, deserunt iure vel aliquam, eos quaerat.</p>
             </div>
           </div>
         </div>
@@ -97,55 +89,171 @@
     </div>
     
 
-    
-    <div class="site-section">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-8">
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Non alias labore similique, laboriosam consequuntur tempora, quas accusantium voluptatibus eius, maiores, minima! Ipsam tempore ex qui voluptatum quo voluptas! Incidunt, pariatur.</p>
-            <p>Dolorem quaerat tenetur corporis praesentium, soluta debitis culpa asperiores, minus delectus quibusdam amet recusandae aliquam voluptatibus dicta quis, facere tempora eum placeat repellendus maxime nesciunt voluptates totam sapiente commodi. Tenetur.</p>
-            <p>Labore natus ullam suscipit distinctio debitis voluptas minima ipsam. Odit, reprehenderit minima distinctio, dolorum ipsam velit, minus labore eum commodi quia quae doloribus impedit blanditiis architecto fugiat delectus provident quas.</p>
-            <p>Asperiores temporibus adipisci dolor quasi assumenda est, itaque corrupti, neque facilis beatae natus voluptatibus aperiam mollitia esse ipsam! Quam perferendis facere sed beatae repudiandae rerum laudantium necessitatibus. Incidunt, dolorem, officiis?</p>
-            <p>Mollitia impedit omnis ullam earum est, quaerat consectetur voluptates quia, dolore asperiores ipsum eligendi quae iste, facere porro debitis nostrum obcaecati culpa eius perspiciatis alias distinctio. Perferendis, magnam mollitia fuga.</p>
-            <p><a href="#" class="btn btn-primary text-white">Contact Agent</a></p>
-          </div>
-          <div class="col-md-3 ml-auto">
-            <h3 class="mb-5">Agent</h3>
-            <div class="person-29381">
-              <div class="media-39912">
-                <img src="images/person_1.jpg" alt="Image" class="img-fluid">
-              </div>
-              <h3><a href="#">Josh Long</a></h3>
-              <span class="meta d-block mb-4">4 Properties</span>
-              <div class="social-32913">
-                <a href="#"><span class="icon-facebook"></span></a>
-                <a href="#"><span class="icon-twitter"></span></a>
-                <a href="#"><span class="icon-instagram"></span></a>
-              </div>
-            </div>
+    <form action="">
+      <div class="realestate-filter">
+        <div class="container">
+          <div class="realestate-filter-wrap nav">
+            <a href="#for-rent" class="active" data-toggle="tab" id="rent-tab" aria-controls="rent" aria-selected="true">For Rent</a>
+            <a href="#for-sale" class="" data-toggle="tab" id="sale-tab" aria-controls="sale" aria-selected="false">For Sale</a>
           </div>
         </div>
       </div>
-    </div>
+      
+      <div class="realestate-tabpane pb-5">
+        <div class="container tab-content">
+           <div class="tab-pane active" id="for-rent" role="tabpanel" aria-labelledby="rent-tab">
+
+             <div class="row">
+               <div class="col-md-4 form-group">
+                 <select name="" id="" class="form-control w-100">
+                   <option value="">All Types</option>
+                   <option value="">Townhouses</option>
+                   <option value="">Duplexes</option>
+                   <option value="">Quadplexes</option>
+                   <option value="">Condominiums</option>
+                 </select>
+               </div>
+               <div class="col-md-4 form-group">
+                 <input type="text" class="form-control" placeholder="Title">
+               </div>
+               <div class="col-md-4 form-group">
+                 <input type="text" class="form-control" placeholder="Address">
+               </div>
+             </div>
+
+             <div class="row">
+               <div class="col-md-4 form-group">
+                 <select name="" id="" class="form-control w-100">
+                   <option value="">Any Bedrooms</option>
+                   <option value="">0</option>
+                   <option value="">1</option>
+                   <option value="">2</option>
+                   <option value="">3+</option>
+                 </select>
+               </div>
+               <div class="col-md-4 form-group">
+                 <select name="" id="" class="form-control w-100">
+                   <option value="">Any Bathrooms</option>
+                   <option value="">0</option>
+                   <option value="">1</option>
+                   <option value="">2</option>
+                   <option value="">3+</option>
+                 </select>
+               </div>
+               <div class="col-md-4 form-group">
+                 <div class="row">
+                   <div class="col-md-6 form-group">
+                     <select name="" id="" class="form-control w-100">
+                       <option value="">Min Price</option>
+                       <option value="">$100</option>
+                       <option value="">$200</option>
+                       <option value="">$300</option>
+                       <option value="">$400</option>
+                     </select>
+                   </div>
+                   <div class="col-md-6">
+                     <select name="" id="" class="form-control w-100">
+                       <option value="">Max Price</option>
+                       <option value="">$25,000</option>
+                       <option value="">$50,000</option>
+                       <option value="">$75,000</option>
+                       <option value="">$100,000</option>
+                       <option value="">$100,000,000</option>
+                     </select>
+                   </div>
+                 </div>
+               </div>
+             </div>
+             <div class="row">
+               <div class="col-md-4">
+                 <input type="submit" class="btn btn-black py-3 btn-block" value="Submit">
+               </div>
+             </div>
+
+           </div>
+           <div class="tab-pane" id="for-sale" role="tabpanel" aria-labelledby="sale-tab">
+             <div class="row">
+               <div class="col-md-4 form-group">
+                 <select name="" id="" class="form-control w-100">
+                   <option value="">All Types</option>
+                   <option value="">Townhouses</option>
+                   <option value="">Duplexes</option>
+                   <option value="">Quadplexes</option>
+                   <option value="">Condominiums</option>
+                 </select>
+               </div>
+               <div class="col-md-4 form-group">
+                 <input type="text" class="form-control" placeholder="Title">
+               </div>
+               <div class="col-md-4 form-group">
+                 <input type="text" class="form-control" placeholder="Address">
+               </div>
+             </div>
+
+             <div class="row">
+               <div class="col-md-4 form-group">
+                 <select name="" id="" class="form-control w-100">
+                   <option value="">Any Bedrooms</option>
+                   <option value="">0</option>
+                   <option value="">1</option>
+                   <option value="">2</option>
+                   <option value="">3+</option>
+                 </select>
+               </div>
+               <div class="col-md-4 form-group">
+                 <select name="" id="" class="form-control w-100">
+                   <option value="">Any Bathrooms</option>
+                   <option value="">0</option>
+                   <option value="">1</option>
+                   <option value="">2</option>
+                   <option value="">3+</option>
+                 </select>
+               </div>
+               <div class="col-md-4 form-group">
+                 <div class="row">
+                   <div class="col-md-6 form-group">
+                     <select name="" id="" class="form-control w-100">
+                       <option value="">Min Price</option>
+                       <option value="">$100</option>
+                       <option value="">$200</option>
+                       <option value="">$300</option>
+                       <option value="">$400</option>
+                     </select>
+                   </div>
+                   <div class="col-md-6">
+                     <select name="" id="" class="form-control w-100">
+                       <option value="">Max Price</option>
+                       <option value="">$25,000</option>
+                       <option value="">$50,000</option>
+                       <option value="">$75,000</option>
+                       <option value="">$100,000</option>
+                       <option value="">$100,000,000</option>
+                     </select>
+                   </div>
+                 </div>
+               </div>
+             </div>
+             <div class="row">
+               <div class="col-md-4">
+                 <input type="submit" class="btn btn-black py-3 btn-block" value="Submit">
+               </div>
+             </div>
+
+           </div>
+        </div>
+      </div>
+    </form>
+    
 
     
     <div class="site-section bg-black">
       <div class="container">
-
-
-        <div class="row justify-content-center">
-          <div class="col-md-6 text-center">
-            <h3 class="heading-29201 text-center text-white">More Related Properties</h3>
-            
-            
-          </div>
-        </div>
         
         <div class="row">
 
           <div class="col-md-4 mb-5">
             <div class="media-38289">
-              <a href="property-single.html" class="d-block"><img src="images/img_1.jpg" alt="Image" class="img-fluid"></a>
+              <a href="property-single.php" class="d-block"><img src="images/img_1.jpg" alt="Image" class="img-fluid"></a>
               <div class="text">
                 <div class="d-flex justify-content-between mb-3">
                   <div class="sq d-flex align-items-center"><span class="wrap-icon icon-fullscreen"></span> <span>2911 Sq Ft.</span></div>
@@ -159,7 +267,7 @@
           </div>
           <div class="col-md-4 mb-5">
             <div class="media-38289">
-            <a href="property-single.html" class="d-block"><img src="images/img_2.jpg" alt="Image" class="img-fluid"></a>
+            <a href="property-single.php" class="d-block"><img src="images/img_2.jpg" alt="Image" class="img-fluid"></a>
             <div class="text">
               <div class="d-flex justify-content-between mb-3">
                 <div class="sq d-flex align-items-center"><span class="wrap-icon icon-fullscreen"></span> <span>2911 Sq Ft.</span></div>
@@ -173,7 +281,7 @@
           </div>
           <div class="col-md-4 mb-5">
             <div class="media-38289">
-              <a href="property-single.html" class="d-block"><img src="images/img_3.jpg" alt="Image" class="img-fluid"></a>
+              <a href="property-single.php" class="d-block"><img src="images/img_3.jpg" alt="Image" class="img-fluid"></a>
               <div class="text">
                 <div class="d-flex justify-content-between mb-3">
                   <div class="sq d-flex align-items-center"><span class="wrap-icon icon-fullscreen"></span> <span>2911 Sq Ft.</span></div>
@@ -188,7 +296,7 @@
 
           <div class="col-md-4 mb-5">
             <div class="media-38289">
-              <a href="property-single.html" class="d-block"><img src="images/img_1.jpg" alt="Image" class="img-fluid"></a>
+              <a href="property-single.php" class="d-block"><img src="images/img_1.jpg" alt="Image" class="img-fluid"></a>
               <div class="text">
                 <div class="d-flex justify-content-between mb-3">
                   <div class="sq d-flex align-items-center"><span class="wrap-icon icon-fullscreen"></span> <span>2911 Sq Ft.</span></div>
@@ -202,7 +310,7 @@
           </div>
           <div class="col-md-4 mb-5">
             <div class="media-38289">
-            <a href="property-single.html" class="d-block"><img src="images/img_2.jpg" alt="Image" class="img-fluid"></a>
+            <a href="property-single.php" class="d-block"><img src="images/img_2.jpg" alt="Image" class="img-fluid"></a>
             <div class="text">
               <div class="d-flex justify-content-between mb-3">
                 <div class="sq d-flex align-items-center"><span class="wrap-icon icon-fullscreen"></span> <span>2911 Sq Ft.</span></div>
@@ -216,7 +324,7 @@
           </div>
           <div class="col-md-4 mb-5">
             <div class="media-38289">
-              <a href="property-single.html" class="d-block"><img src="images/img_3.jpg" alt="Image" class="img-fluid"></a>
+              <a href="property-single.php" class="d-block"><img src="images/img_3.jpg" alt="Image" class="img-fluid"></a>
               <div class="text">
                 <div class="d-flex justify-content-between mb-3">
                   <div class="sq d-flex align-items-center"><span class="wrap-icon icon-fullscreen"></span> <span>2911 Sq Ft.</span></div>
@@ -228,6 +336,17 @@
               </div>
             </div>
           </div>
+
+
+          <div class="col-12 mt-5 text-center pagination-39291">
+            <span class="active">1</span>
+            <a href="#">2</a>
+            <a href="#">3</a>
+            <a href="#">4</a>
+          </div>
+
+          
+          
         </div>
       </div>
     </div>

@@ -46,7 +46,7 @@
 
             <div class="col-3 ">
               <div class="site-logo">
-                <a href="index.html">DreamHouse</a>
+                <a href="index.php">DreamHouse</a>
               </div>
             </div>
 
@@ -59,12 +59,12 @@
 
               <nav class="site-navigation text-right ml-auto d-none d-lg-block" role="navigation">
                 <ul class="site-menu main-menu js-clone-nav ml-auto ">
-                  <li><a href="index.html" class="nav-link">Home</a></li>
-                  <li class="active"><a href="agents.html" class="nav-link">Agents</a></li>
-                  <li><a href="property.html" class="nav-link">Property</a></li>
-                  <li><a href="about.html" class="nav-link">About</a></li>
-                  <li><a href="blog.html" class="nav-link">Blog</a></li>
-                  <li><a href="contact.html" class="nav-link">Contact</a></li>
+                  <li><a href="index.php" class="nav-link">Home</a></li>
+                  <li class="active"><a href="agents.php" class="nav-link">Agents</a></li>
+                  <li><a href="property.php" class="nav-link">Property</a></li>
+                  <li><a href="about.php" class="nav-link">About</a></li>
+                  <li><a href="blog.php" class="nav-link">Blog</a></li>
+                  <li><a href="contact.php" class="nav-link">Contact</a></li>
                 </ul>
               </nav>
             </div>
