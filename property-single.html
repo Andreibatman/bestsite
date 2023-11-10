@@ -21,6 +21,54 @@
     <!-- MAIN CSS -->
     <link rel="stylesheet" href="css/style.css">
 
+    <style> 
+      h1 { 
+          color: green; 
+      } 
+              
+      /* column pic */
+      .column { 
+          float: left; 
+          width: 25%; 
+          padding: 10px; 
+      } 
+              
+      /* Style the images of gallery */
+      .column img { 
+          opacity: 0.6; 
+          cursor: zoom-in; 
+          padding: 5px; 
+      } 
+        
+      .column img:hover { 
+          opacity: 1; 
+          transform: scale(1.1); 
+          transition: 0.5s; 
+      } 
+        
+      .column img:active { 
+          opacity: 1; 
+      } 
+              
+      * { 
+          box-sizing: border-box; 
+      } 
+        
+      /* Expanding image text */
+      #geeks { 
+          position: absolute; 
+          left: 200px; 
+          padding-top: 100px; 
+          font-size: 28px; 
+          color: #EFECE9; 
+      } 
+        
+      #geeks:hover { 
+          color: #ADE3BD; 
+          cursor: wait; 
+      } 
+  </style>
+
   </head>
 
   <body data-spy="scroll" data-target=".site-navbar-target" data-offset="300">
