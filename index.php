@@ -1,52 +1,58 @@
 <?php
   require_once "php/config.php";
-  if(isset($_POST['submit'])){
-    echo ("mergi");
-    $sql = "SELECT * FROM posts where 'name' like $name"; #and 'address' like $address and 'price' like $price and 'type' like $type and 'bathroom' like $bathroom and 'bedroom' like $bedroom";
-    if($result = mysqli_query($link, $sql)){
-        if(mysqli_num_rows($result) > 0){
-            echo '<table class="table table-bordered table-striped">';
-                echo "<thead>";
-                    echo "<tr>";
-                        echo "<th>#</th>";
-                        echo "<th>Name</th>";
-                        echo "<th>Address</th>";
-                        echo "<th>Price</th>";
-                        echo "<th>Image</th>";
-                        echo "<th>Type</th>";
-                        echo "<th>Bathrooms</th>";
-                        echo "<th>Bedrooms</th>";
-                        
-                    echo "</tr>";
-                echo "</thead>";
-                echo "<tbody>";
-                while($row = mysqli_fetch_array($result)){
-                    echo "<tr>";
-                        echo "<td>" . $row['id'] . "</td>";
-                        echo "<td>" . $row['name'] . "</td>";
-                        echo "<td>" . $row['address'] . "</td>";
-                        echo "<td>" . $row['price'] . "</td>";
-                        echo "<td>" . $row['image'] . "</td>";
-                        echo "<td>" . $row['type'] . "</td>";
-                        echo "<td>" . $row['bathroom'] . "</td>";
-                        echo "<td>" . $row['bedroom'] . "</td>";
-                        
-                    echo "</tr>";
-                }
-                echo "</tbody>";                            
-            echo "</table>";
-            // Free result set
-            mysqli_free_result($result);
-        } else{
-            echo '<div class="alert alert-danger"><em>No records were found.</em></div>';
-        }
-    } else{
-        echo "Oops! Something went wrong. Please try again later.";
+  if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Retrieve filter values
+    $type = $_POST['type'];
+    $bedroom = $_POST['bedroom'];
+    $bathroom = $_POST['bathroom'];
+    $name = $_POST['name'];
+    $address = $_POST['address'];
+    $price = $_POST['price'];
+
+    // Build the SQL query based on the filter values
+    $sql = "SELECT * FROM posts WHERE
+            type = ? or ? = ''
+            AND bedrooms = ? OR ? = ''
+            AND bathrooms = ? OR ? = ''
+            AND (name LIKE ? OR ? = '')
+            AND (address LIKE ? OR ? = '')
+            AND (price LIKE ? OR ? = '')";
+
+    // Prepare the SQL statement
+    $stmt = $link->prepare($sql);
+
+    // Bind parameters
+    $stmt->bind_param('ssssssssssss',
+        $type, $type,
+        $bedroom, $bedroom,
+        $bathroom, $bathroom,
+        $name, $name,
+        $address, $address,
+        $price, $price
+    );
+
+    // Execute the statement
+    $stmt->execute();
+
+    // Get the result set
+    $result = $stmt->get_result();
+
+    // Fetch and display the results
+    while ($row = $result->fetch_assoc()) {
+        // Display your post data here
+        echo "<p>Name: {$row['name']}</p>";
+        echo "<p>Address: {$row['address']}</p>";
+        echo "<p>Price: {$row['price']}</p>";
+        echo "<p>Type: {$row['type']}</p>";
+        echo "<p>Bedrooms: {$row['bedrooms']}</p>";
+        echo "<p>Bathrooms: {$row['bathrooms']}</p>";
+        echo "<img src='{$row['image']}' alt='Post Image'>";
+        echo "<hr>";
     }
- 
-                    // Close connection
-                    mysqli_close($link);
-  }
+
+    // Close the statement
+    $stmt->close();
+}
 ?>
 
 
@@ -171,43 +177,43 @@
 
              <div class="row">
                <div class="col-md-4 form-group">
-                 <select name="type" id="" class="form-control w-100">
-                   <option value="All Types">All Types</option>
+                 <input name="type" type="text" id="" class="form-control w-100" placeholder="Type">
+                   <!-- <option value="All Types">All Types</option>
                    <option value="Townhouses">Townhouses</option>
                    <option value="Duplexes">Duplexes</option>
                    <option value="Quadplexes">Quadplexes</option>
                    <option value="Condominiums">Condominiums</option>
-                 </select>
+                 </select>-->
                </div>
                <div class="col-md-4 form-group">
-                 <input type="text" class="form-control" placeholder="Title">
+                 <input name="name" type="text" class="form-control" placeholder="Title">
                </div>
                <div class="col-md-4 form-group">
-                 <input type="text" class="form-control" placeholder="Address">
+                 <input name="address" type="text" class="form-control" placeholder="Address">
                </div>
              </div>
 
              <div class="row">
                <div class="col-md-4 form-group">
-                 <select name="bedroom" id="" class="form-control w-100">
-                   <option value="Any Bedrooms">Any Bedrooms</option>
+                 <input name="bedroom" id="" class="form-control w-100" placeholder="Bedrooms">
+                   <!-- <option value="Any Bedrooms">Any Bedrooms</option>
                    <option value="0">0</option>
                    <option value="1">1</option>
                    <option value="2">2</option>
                    <option value="3+">3+</option>
-                 </select>
+                 </select> -->
                </div>
                <div class="col-md-4 form-group">
-                 <select name="bathroom" id="" class="form-control w-100">
-                   <option value="Any Bathrooms">Any Bathrooms</option>
+                 <input name="bathroom" id="" class="form-control w-100" placeholder="Bathrooms">
+                   <!-- <option value="Any Bathrooms">Any Bathrooms</option>
                    <option value="0">0</option>
                    <option value="1">1</option>
                    <option value="2">2</option>
                    <option value="3+">3+</option>
-                 </select>
+                 </select> -->
                </div>   
                 <div class="col-md-4 form-group">
-                  <input type="text" class="form-control" placeholder="Price">
+                  <input name="price" type="text" class="form-control" placeholder="Price">
                 </div>  
              </div>
              <div class="row">
@@ -225,12 +231,12 @@
       <h6>Posts List</h6>
       <hr>
       <?php 
-        if(isset($_POST['Submit'])){
-          echo ("mergi");
-          $sql = "SELECT * FROM posts"; #and 'address' like $address and 'price' like $price and 'type' like $type and 'bathroom' like $bathroom and 'bedroom' like $bedroom";
-          foreach ($sql as $post)          
-            if($post['name']==$name)
-              echo $name;
+        // if(isset($_POST['Submit'])){
+        //   echo ("mergi");
+        //   $sql = "SELECT * FROM posts"; #and 'address' like $address and 'price' like $price and 'type' like $type and 'bathroom' like $bathroom and 'bedroom' like $bedroom";
+        //   foreach ($sql as $post)          
+        //     if($post['name']==$name)
+        //       echo $name;
           #if($result = mysqli_query($link, $sql)){
           #    if(mysqli_num_rows($result) > 0){
         //           echo '<table class="table table-bordered table-striped">';
@@ -267,7 +273,7 @@
         //           mysqli_free_result($result);
         //       }
         //   }
-         }
+         //}
       ?>
     </div>
 

@@ -45,15 +45,21 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
     } else{
         $image = $input_image;
     }
+    // Validate bathrooms
+    $bathroom = trim($_POST["bathroom"]);
     
+    // Validate bedrooms
+    $bedroom = trim($_POST["bedroom"]);
+
+    $type = trim($_POST["type"]);
     // Check input errors before inserting in database
     if(empty($name_err) && empty($address_err) && empty($price_err) && empty($image_err)){
         // Prepare an update statement
-        $sql = "UPDATE posts SET name=?, address=?, price=?, image=?, type=?, bathroom=?, bedroom=? WHERE id=?";
+        $sql = "UPDATE posts SET name=?, address=?, price=?, image=?, type=?, bathrooms=?, bedrooms=? WHERE id=?";
          
         if($stmt = mysqli_prepare($link, $sql)){
             // Bind variables to the prepared statement as parameters
-            mysqli_stmt_bind_param($stmt, "sssssssi", $param_name, $param_address, $param_price, $param_image, $param_type, $param_bathroom, $param_bedroom, $param_id);
+            mysqli_stmt_bind_param($stmt, "ssssssss", $param_name, $param_address, $param_price, $param_image, $param_type, $param_bathroom, $param_bedroom, $param_id);
             
             // Set parameters
             $param_name = $name;
@@ -111,8 +117,8 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
                     $price = $row["price"];
                     $image = $row["image"];
                     $type = $row['type'];
-                    $bathroom = $row['bathroom'];
-                    $bedroom = $row['bedroom'];
+                    $bathroom = $row['bathrooms'];
+                    $bedroom = $row['bedrooms'];
 
                 } else{
                     // URL doesn't contain valid id. Redirect to error page
@@ -165,6 +171,10 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
                             <span class="invalid-feedback"><?php echo $name_err;?></span>
                         </div>
                         <div class="form-group">
+                            <label>Type</label>
+                            <input type="text" name="type" class="form-control" value="<?php echo $name; ?>">
+                        </div>
+                        <div class="form-group">
                             <label>Address</label>
                             <textarea name="address" class="form-control <?php echo (!empty($address_err)) ? 'is-invalid' : ''; ?>"><?php echo $address; ?></textarea>
                             <span class="invalid-feedback"><?php echo $address_err;?></span>
@@ -173,6 +183,15 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
                             <label>Price</label>
                             <input type="text" name="price" class="form-control <?php echo (!empty($price_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $price; ?>">
                             <span class="invalid-feedback"><?php echo $price_err;?></span>
+                        </div>
+                        <div class="form-group">
+                            <label>Bedrooms</label>
+                            <input type="text" name="bedroom" class="form-control" value="<?php echo $bedroom; ?>">
+                            
+                        </div>
+                        <div class="form-group">
+                            <label>Bathrooms</label>
+                            <input type="text" name="bathroom" class="form-control" value="<?php echo $bathroom; ?>">
                         </div>
                         <div class="form-group">
                             <label>Image</label>

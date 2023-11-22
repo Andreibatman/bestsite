@@ -28,8 +28,9 @@ if(isset($_GET["id"]) && !empty(trim($_GET["id"]))){
                 $address = $row["address"];
                 $price = $row["price"];
                 $image = $row["image"];
-                $bathroom = $row["bathroom"];
-                $type = $row["bathroom"];
+                $bathroom = $row["bathrooms"];
+                $bedroom = $row["bedrooms"];
+                $type = $row["type"];
             } else{
                 // URL doesn't contain valid id parameter. Redirect to error page
                 header("location: error.php");
@@ -81,8 +82,20 @@ if(isset($_GET["id"]) && !empty(trim($_GET["id"]))){
                         <p><b><?php echo $row["address"]; ?></b></p>
                     </div>
                     <div class="form-group">
+                        <label>Type</label>
+                        <p><b><?php echo $row["type"]; ?></b></p>
+                    </div>
+                    <div class="form-group">
                         <label>Price</label>
                         <p><b><?php echo $row["price"]; ?></b></p>
+                    </div>
+                    <div class="form-group">
+                        <label>Bathrooms</label>
+                        <p><b><?php echo $row["bathrooms"]; ?></b></p>
+                    </div>
+                    <div class="form-group">
+                        <label>Bedrooms</label>
+                        <p><b><?php echo $row["bedrooms"]; ?></b></p>
                     </div>
                     <div class="form-group">
                         <label>Image</label>
