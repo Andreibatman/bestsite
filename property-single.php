@@ -97,7 +97,57 @@
     </div>
     
 
-    
+    <?php
+// property_single.php
+
+// Include config file
+require_once "php/config.php";
+
+// Check if the ID parameter is provided
+if (isset($_GET["id"])) {
+    // Retrieve the post ID from the URL
+    $post_id = $_GET["id"];
+
+    // Prepare a SELECT statement
+    $sql = "SELECT * FROM posts WHERE id = ?";
+
+    if ($stmt = mysqli_prepare($link, $sql)) {
+        // Bind variables to the prepared statement as parameters
+        mysqli_stmt_bind_param($stmt, "i", $post_id);
+
+        // Attempt to execute the prepared statement
+        if (mysqli_stmt_execute($stmt)) {
+            // Get the result set
+            $result = mysqli_stmt_get_result($stmt);
+
+            // Fetch the post data
+            if ($row = mysqli_fetch_assoc($result)) {
+                // Display the post details
+                echo "<h2>{$row['name']}</h2>";
+                echo "<p>Address: {$row['address']}</p>";
+                echo "<p>Price: {$row['price']}</p>";
+                echo "<p>Type: {$row['type']}</p>";
+                echo "<p>Bedrooms: {$row['bedrooms']}</p>";
+                echo "<p>Bathrooms: {$row['bathrooms']}</p>";
+                echo "<img src='{$row['image']}' alt='Property Image'>";
+            } else {
+                echo "No post found with the provided ID.";
+            }
+        } else {
+            echo "Oops! Something went wrong. Please try again later.";
+        }
+
+        // Close the statement
+        mysqli_stmt_close($stmt);
+    }
+
+    // Close the connection
+    mysqli_close($link);
+} else {
+    echo "No post ID provided.";
+}
+?>
+<!--     
     <div class="site-section">
       <div class="container">
         <div class="row">
@@ -126,7 +176,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
 
     
     <div class="site-section bg-black">

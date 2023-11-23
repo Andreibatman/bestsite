@@ -47,6 +47,7 @@
         echo "<p>Bedrooms: {$row['bedrooms']}</p>";
         echo "<p>Bathrooms: {$row['bathrooms']}</p>";
         echo "<img src='{$row['image']}' alt='Post Image'>";
+        echo "<a href='property-single.php?id={$row['id']}'>View Details</a>";
         echo "<hr>";
     }
 
