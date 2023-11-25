@@ -99,7 +99,7 @@ if(isset($_GET["id"]) && !empty(trim($_GET["id"]))){
                     </div>
                     <div class="form-group">
                         <label>Image</label>
-                        <p><b><?php echo $row["image"]; ?></b></p>
+                        <p><b><?php echo "<img src='{$row['image']}' alt='Property Image'>"; ?></b></p>
                     </div>
                     <p><a href="dashboard.php" class="btn btn-primary">Back</a></p>
                 </div>

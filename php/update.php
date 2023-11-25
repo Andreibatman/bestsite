@@ -1,66 +1,114 @@
 <?php
 // Include config file
 require_once "config.php";
- 
+
 // Define variables and initialize with empty values
-$name = $address = $price = $image = $type = $bathroom = $bedroom = "";
-$name_err = $address_err = $price_err = $image_err = "";
- 
+$name = $address = $price = $type = $bathroom = $bedroom = "";
+$name_err = $address_err = $price_err = $type_err = $image_err = "";
+
 // Processing form data when form is submitted
-if(isset($_POST["id"]) && !empty($_POST["id"])){
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Get hidden input value
     $id = $_POST["id"];
-    
+
     // Validate name
     $input_name = trim($_POST["name"]);
-    if(empty($input_name)){
+    if (empty($input_name)) {
         $name_err = "Please enter a name.";
-    } elseif(!filter_var($input_name, FILTER_VALIDATE_REGEXP, array("options"=>array("regexp"=>"/^[a-zA-Z\s]+$/")))){
+    } elseif (!filter_var($input_name, FILTER_VALIDATE_REGEXP, array("options" => array("regexp" => "/^[a-zA-Z\s]+$/")))) {
         $name_err = "Please enter a valid name.";
-    } else{
+    } else {
         $name = $input_name;
     }
-    
+
     // Validate address address
     $input_address = trim($_POST["address"]);
-    if(empty($input_address)){
-        $address_err = "Please enter an address.";     
-    } else{
+    if (empty($input_address)) {
+        $address_err = "Please enter an address.";
+    } else {
         $address = $input_address;
     }
-    
+
     // Validate price
     $input_price = trim($_POST["price"]);
-    if(empty($input_price)){
-        $price_err = "Please enter the price amount.";     
-    } elseif(!ctype_digit($input_price)){
+    if (empty($input_price)) {
+        $price_err = "Please enter the price amount.";
+    } elseif (!ctype_digit($input_price)) {
         $price_err = "Please enter a positive integer value.";
-    } else{
+    } else {
         $price = $input_price;
     }
-    
-    $input_image = trim($_POST["image"]);
-    if(empty($input_image)){
-        $image_err = "Please select an image.";
-    } else{
-        $image = $input_image;
+
+    // Validate type
+    $type = trim($_POST["type"]);
+    if (empty($type)) {
+        $type_err = "Please select a type.";
     }
+
     // Validate bathrooms
     $bathroom = trim($_POST["bathroom"]);
-    
+
     // Validate bedrooms
     $bedroom = trim($_POST["bedroom"]);
 
-    $type = trim($_POST["type"]);
-    // Check input errors before inserting in database
-    if(empty($name_err) && empty($address_err) && empty($price_err) && empty($image_err)){
+    // Validate image
+    $input_image = $_FILES["image"]["name"];
+
+    if (!empty($input_image)) {
+        $target_directory = "uploads/";
+        $target_file = $target_directory . basename($input_image);
+        $uploadOk = 1;
+        $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+
+        // Check if the file is an actual image or fake image
+        $check = getimagesize($_FILES["image"]["tmp_name"]);
+        if ($check === false) {
+            $image_err = "File is not an image.";
+            $uploadOk = 0;
+        }
+
+        // Check if the file already exists
+        if (file_exists($target_file)) {
+            $image_err = "Sorry, file already exists.";
+            $uploadOk = 0;
+        }
+
+        // Check file size
+        if ($_FILES["image"]["size"] > 500000) {
+            $image_err = "Sorry, your file is too large.";
+            $uploadOk = 0;
+        }
+
+        // Allow certain file formats
+        $allowed_formats = array("jpg", "jpeg", "png", "gif");
+        if (!in_array($imageFileType, $allowed_formats)) {
+            $image_err = "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+            $uploadOk = 0;
+        }
+
+        // Check if $uploadOk is set to 0 by an error
+        if ($uploadOk == 0) {
+            echo "Sorry, your file was not uploaded.";
+        } else {
+            // If everything is ok, try to upload the file
+            if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
+                // File uploaded successfully, store file path in the database
+                $image = $target_file;
+            } else {
+                echo "Sorry, there was an error uploading your file.";
+            }
+        }
+    }
+
+    // Check input errors before inserting into the database
+    if (empty($name_err) && empty($address_err) && empty($price_err) && empty($type_err) && empty($image_err)) {
         // Prepare an update statement
         $sql = "UPDATE posts SET name=?, address=?, price=?, image=?, type=?, bathrooms=?, bedrooms=? WHERE id=?";
-         
-        if($stmt = mysqli_prepare($link, $sql)){
+
+        if ($stmt = mysqli_prepare($link, $sql)) {
             // Bind variables to the prepared statement as parameters
-            mysqli_stmt_bind_param($stmt, "ssssssss", $param_name, $param_address, $param_price, $param_image, $param_type, $param_bathroom, $param_bedroom, $param_id);
-            
+            mysqli_stmt_bind_param($stmt, "sssssssi", $param_name, $param_address, $param_price, $param_image, $param_type, $param_bathroom, $param_bedroom, $param_id);
+
             // Set parameters
             $param_name = $name;
             $param_address = $address;
@@ -70,47 +118,47 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
             $param_type = $type;
             $param_bathroom = $bathroom;
             $param_bedroom = $bedroom;
-            
+
             // Attempt to execute the prepared statement
-            if(mysqli_stmt_execute($stmt)){
-                // Posts updated successfully. Redirect to landing page
+            if (mysqli_stmt_execute($stmt)) {
+                // Posts updated successfully. Redirect to the landing page
                 header("location: dashboard.php");
                 exit();
-            } else{
+            } else {
                 echo "Oops! Something went wrong. Please try again later.";
             }
         }
-         
+
         // Close statement
         mysqli_stmt_close($stmt);
     }
-    
+
     // Close connection
     mysqli_close($link);
-} else{
+} else {
     // Check existence of id parameter before processing further
-    if(isset($_GET["id"]) && !empty(trim($_GET["id"]))){
+    if (isset($_GET["id"]) && !empty(trim($_GET["id"]))) {
         // Get URL parameter
-        $id =  trim($_GET["id"]);
-        
+        $id = trim($_GET["id"]);
+
         // Prepare a select statement
         $sql = "SELECT * FROM posts WHERE id = ?";
-        if($stmt = mysqli_prepare($link, $sql)){
+        if ($stmt = mysqli_prepare($link, $sql)) {
             // Bind variables to the prepared statement as parameters
             mysqli_stmt_bind_param($stmt, "i", $param_id);
-            
+
             // Set parameters
             $param_id = $id;
-            
+
             // Attempt to execute the prepared statement
-            if(mysqli_stmt_execute($stmt)){
+            if (mysqli_stmt_execute($stmt)) {
                 $result = mysqli_stmt_get_result($stmt);
-    
-                if(mysqli_num_rows($result) == 1){
+
+                if (mysqli_num_rows($result) == 1) {
                     /* Fetch result row as an associative array. Since the result set
                     contains only one row, we don't need to use while loop */
                     $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
-                    
+
                     // Retrieve individual field value
                     $name = $row["name"];
                     $address = $row["address"];
@@ -119,25 +167,23 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
                     $type = $row['type'];
                     $bathroom = $row['bathrooms'];
                     $bedroom = $row['bedrooms'];
-
-                } else{
-                    // URL doesn't contain valid id. Redirect to error page
+                } else {
+                    // URL doesn't contain valid id. Redirect to the error page
                     header("location: error.php");
                     exit();
                 }
-                
-            } else{
+            } else {
                 echo "Oops! Something went wrong. Please try again later.";
             }
         }
-        
+
         // Close statement
         mysqli_stmt_close($stmt);
-        
+
         // Close connection
         mysqli_close($link);
-    }  else{
-        // URL doesn't contain id parameter. Redirect to error page
+    } else {
+        // URL doesn't contain the id parameter. Redirect to the error page
         header("location: error.php");
         exit();
     }
@@ -164,7 +210,7 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
                 <div class="col-md-12">
                     <h2 class="mt-5">Update Post</h2>
                     <p>Please edit the input values and submit to update the post.</p>
-                    <form action="<?php echo htmlspecialchars(basename($_SERVER['REQUEST_URI'])); ?>" method="post">
+                    <form action="<?php echo htmlspecialchars(basename($_SERVER['REQUEST_URI'])); ?>" method="post" enctype="multipart/form-data">
                         <div class="form-group">
                             <label>Name</label>
                             <input type="text" name="name" class="form-control <?php echo (!empty($name_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $name; ?>">

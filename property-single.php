@@ -129,7 +129,7 @@ if (isset($_GET["id"])) {
                 echo "<p>Type: {$row['type']}</p>";
                 echo "<p>Bedrooms: {$row['bedrooms']}</p>";
                 echo "<p>Bathrooms: {$row['bathrooms']}</p>";
-                echo "<img src='{$row['image']}' alt='Property Image'>";
+                echo "<img src='php/{$row['image']}' alt='Property Image'>";
             } else {
                 echo "No post found with the provided ID.";
             }

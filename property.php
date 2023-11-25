@@ -1,3 +1,60 @@
+<?php
+  require_once "php/config.php";
+  if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Retrieve filter values
+    $type = $_POST['type'];
+    $bedroom = $_POST['bedroom'];
+    $bathroom = $_POST['bathroom'];
+    $name = $_POST['name'];
+    $address = $_POST['address'];
+    $price = $_POST['price'];
+
+    // Build the SQL query based on the filter values
+    $sql = "SELECT * FROM posts WHERE
+            type = ? or ? = ''
+            AND bedrooms = ? OR ? = ''
+            AND bathrooms = ? OR ? = ''
+            AND (name LIKE ? OR ? = '')
+            AND (address LIKE ? OR ? = '')
+            AND (price LIKE ? OR ? = '')";
+
+    // Prepare the SQL statement
+    $stmt = $link->prepare($sql);
+
+    // Bind parameters
+    $stmt->bind_param('ssssssssssss',
+        $type, $type,
+        $bedroom, $bedroom,
+        $bathroom, $bathroom,
+        $name, $name,
+        $address, $address,
+        $price, $price
+    );
+
+    // Execute the statement
+    $stmt->execute();
+
+    // Get the result set
+    $result = $stmt->get_result();
+
+    // Fetch and display the results
+    while ($row = $result->fetch_assoc()) {
+        // Display your post data here
+        echo "<p>Name: {$row['name']}</p>";
+        echo "<p>Address: {$row['address']}</p>";
+        echo "<p>Price: {$row['price']}</p>";
+        echo "<p>Type: {$row['type']}</p>";
+        echo "<p>Bedrooms: {$row['bedrooms']}</p>";
+        echo "<p>Bathrooms: {$row['bathrooms']}</p>";
+        echo "<img src='php/{$row['image']}' alt='Post Image'>";
+        echo "<a href='property-single.php?id={$row['id']}'>View Details</a>";
+        echo "<hr>";
+    }
+
+    // Close the statement
+    $stmt->close();
+}
+?>
 <!doctype html>
 <html lang="en">
 
@@ -89,7 +146,7 @@
     </div>
     
 
-    <form action="">
+    <form method = "POST" action="index.php">
       <div class="realestate-filter">
         <div class="container">
           <div class="realestate-filter-wrap nav">
@@ -105,140 +162,51 @@
 
              <div class="row">
                <div class="col-md-4 form-group">
-                 <select name="" id="" class="form-control w-100">
-                   <option value="">All Types</option>
-                   <option value="">Townhouses</option>
-                   <option value="">Duplexes</option>
-                   <option value="">Quadplexes</option>
-                   <option value="">Condominiums</option>
-                 </select>
+                 <input name="type" type="text" id="" class="form-control w-100" placeholder="Type">
+                   <!-- <option value="All Types">All Types</option>
+                   <option value="Townhouses">Townhouses</option>
+                   <option value="Duplexes">Duplexes</option>
+                   <option value="Quadplexes">Quadplexes</option>
+                   <option value="Condominiums">Condominiums</option>
+                 </select>-->
                </div>
                <div class="col-md-4 form-group">
-                 <input type="text" class="form-control" placeholder="Title">
+                 <input name="name" type="text" class="form-control" placeholder="Title">
                </div>
                <div class="col-md-4 form-group">
-                 <input type="text" class="form-control" placeholder="Address">
+                 <input name="address" type="text" class="form-control" placeholder="Address">
                </div>
              </div>
 
              <div class="row">
                <div class="col-md-4 form-group">
-                 <select name="" id="" class="form-control w-100">
-                   <option value="">Any Bedrooms</option>
-                   <option value="">0</option>
-                   <option value="">1</option>
-                   <option value="">2</option>
-                   <option value="">3+</option>
-                 </select>
+                 <input name="bedroom" id="" class="form-control w-100" placeholder="Bedrooms">
+                   <!-- <option value="Any Bedrooms">Any Bedrooms</option>
+                   <option value="0">0</option>
+                   <option value="1">1</option>
+                   <option value="2">2</option>
+                   <option value="3+">3+</option>
+                 </select> -->
                </div>
                <div class="col-md-4 form-group">
-                 <select name="" id="" class="form-control w-100">
-                   <option value="">Any Bathrooms</option>
-                   <option value="">0</option>
-                   <option value="">1</option>
-                   <option value="">2</option>
-                   <option value="">3+</option>
-                 </select>
-               </div>
-               <div class="col-md-4 form-group">
-                 <div class="row">
-                   <div class="col-md-6 form-group">
-                     <select name="" id="" class="form-control w-100">
-                       <option value="">Min Price</option>
-                       <option value="">$100</option>
-                       <option value="">$200</option>
-                       <option value="">$300</option>
-                       <option value="">$400</option>
-                     </select>
-                   </div>
-                   <div class="col-md-6">
-                     <select name="" id="" class="form-control w-100">
-                       <option value="">Max Price</option>
-                       <option value="">$25,000</option>
-                       <option value="">$50,000</option>
-                       <option value="">$75,000</option>
-                       <option value="">$100,000</option>
-                       <option value="">$100,000,000</option>
-                     </select>
-                   </div>
-                 </div>
-               </div>
+                 <input name="bathroom" id="" class="form-control w-100" placeholder="Bathrooms">
+                   <!-- <option value="Any Bathrooms">Any Bathrooms</option>
+                   <option value="0">0</option>
+                   <option value="1">1</option>
+                   <option value="2">2</option>
+                   <option value="3+">3+</option>
+                 </select> -->
+               </div>   
+                <div class="col-md-4 form-group">
+                  <input name="price" type="text" class="form-control" placeholder="Price">
+                </div>  
              </div>
              <div class="row">
                <div class="col-md-4">
                  <input type="submit" class="btn btn-black py-3 btn-block" value="Submit">
                </div>
              </div>
-
-           </div>
-           <div class="tab-pane" id="for-sale" role="tabpanel" aria-labelledby="sale-tab">
-             <div class="row">
-               <div class="col-md-4 form-group">
-                 <select name="" id="" class="form-control w-100">
-                   <option value="">All Types</option>
-                   <option value="">Townhouses</option>
-                   <option value="">Duplexes</option>
-                   <option value="">Quadplexes</option>
-                   <option value="">Condominiums</option>
-                 </select>
-               </div>
-               <div class="col-md-4 form-group">
-                 <input type="text" class="form-control" placeholder="Title">
-               </div>
-               <div class="col-md-4 form-group">
-                 <input type="text" class="form-control" placeholder="Address">
-               </div>
-             </div>
-
-             <div class="row">
-               <div class="col-md-4 form-group">
-                 <select name="" id="" class="form-control w-100">
-                   <option value="">Any Bedrooms</option>
-                   <option value="">0</option>
-                   <option value="">1</option>
-                   <option value="">2</option>
-                   <option value="">3+</option>
-                 </select>
-               </div>
-               <div class="col-md-4 form-group">
-                 <select name="" id="" class="form-control w-100">
-                   <option value="">Any Bathrooms</option>
-                   <option value="">0</option>
-                   <option value="">1</option>
-                   <option value="">2</option>
-                   <option value="">3+</option>
-                 </select>
-               </div>
-               <div class="col-md-4 form-group">
-                 <div class="row">
-                   <div class="col-md-6 form-group">
-                     <select name="" id="" class="form-control w-100">
-                       <option value="">Min Price</option>
-                       <option value="">$100</option>
-                       <option value="">$200</option>
-                       <option value="">$300</option>
-                       <option value="">$400</option>
-                     </select>
-                   </div>
-                   <div class="col-md-6">
-                     <select name="" id="" class="form-control w-100">
-                       <option value="">Max Price</option>
-                       <option value="">$25,000</option>
-                       <option value="">$50,000</option>
-                       <option value="">$75,000</option>
-                       <option value="">$100,000</option>
-                       <option value="">$100,000,000</option>
-                     </select>
-                   </div>
-                 </div>
-               </div>
-             </div>
-             <div class="row">
-               <div class="col-md-4">
-                 <input type="submit" class="btn btn-black py-3 btn-block" value="Submit">
-               </div>
-             </div>
-
+            </div>
            </div>
         </div>
       </div>

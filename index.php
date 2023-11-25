@@ -1,62 +1,3 @@
-<?php
-  require_once "php/config.php";
-  if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Retrieve filter values
-    $type = $_POST['type'];
-    $bedroom = $_POST['bedroom'];
-    $bathroom = $_POST['bathroom'];
-    $name = $_POST['name'];
-    $address = $_POST['address'];
-    $price = $_POST['price'];
-
-    // Build the SQL query based on the filter values
-    $sql = "SELECT * FROM posts WHERE
-            type = ? or ? = ''
-            AND bedrooms = ? OR ? = ''
-            AND bathrooms = ? OR ? = ''
-            AND (name LIKE ? OR ? = '')
-            AND (address LIKE ? OR ? = '')
-            AND (price LIKE ? OR ? = '')";
-
-    // Prepare the SQL statement
-    $stmt = $link->prepare($sql);
-
-    // Bind parameters
-    $stmt->bind_param('ssssssssssss',
-        $type, $type,
-        $bedroom, $bedroom,
-        $bathroom, $bathroom,
-        $name, $name,
-        $address, $address,
-        $price, $price
-    );
-
-    // Execute the statement
-    $stmt->execute();
-
-    // Get the result set
-    $result = $stmt->get_result();
-
-    // Fetch and display the results
-    while ($row = $result->fetch_assoc()) {
-        // Display your post data here
-        echo "<p>Name: {$row['name']}</p>";
-        echo "<p>Address: {$row['address']}</p>";
-        echo "<p>Price: {$row['price']}</p>";
-        echo "<p>Type: {$row['type']}</p>";
-        echo "<p>Bedrooms: {$row['bedrooms']}</p>";
-        echo "<p>Bathrooms: {$row['bathrooms']}</p>";
-        echo "<img src='{$row['image']}' alt='Post Image'>";
-        echo "<a href='property-single.php?id={$row['id']}'>View Details</a>";
-        echo "<hr>";
-    }
-
-    // Close the statement
-    $stmt->close();
-}
-?>
-
-
 <!doctype html>
 <html lang="en">
 
@@ -231,51 +172,63 @@
     <div>
       <h6>Posts List</h6>
       <hr>
-      <?php 
-        // if(isset($_POST['Submit'])){
-        //   echo ("mergi");
-        //   $sql = "SELECT * FROM posts"; #and 'address' like $address and 'price' like $price and 'type' like $type and 'bathroom' like $bathroom and 'bedroom' like $bedroom";
-        //   foreach ($sql as $post)          
-        //     if($post['name']==$name)
-        //       echo $name;
-          #if($result = mysqli_query($link, $sql)){
-          #    if(mysqli_num_rows($result) > 0){
-        //           echo '<table class="table table-bordered table-striped">';
-        //               echo "<thead>";
-        //                   echo "<tr>";
-        //                       echo "<th>#</th>";
-        //                       echo "<th>Name</th>";
-        //                       echo "<th>Address</th>";
-        //                       echo "<th>Price</th>";
-        //                       echo "<th>Image</th>";
-        //                       echo "<th>Type</th>";
-        //                       echo "<th>Bathrooms</th>";
-        //                       echo "<th>Bedrooms</th>";
-                              
-        //                   echo "</tr>";
-        //               echo "</thead>";
-        //               echo "<tbody>";
-        //               while($row = mysqli_fetch_array($result)){
-        //                   echo "<tr>";
-        //                       echo "<td>" . $row['id'] . "</td>";
-        //                       echo "<td>" . $row['name'] . "</td>";
-        //                       echo "<td>" . $row['address'] . "</td>";
-        //                       echo "<td>" . $row['price'] . "</td>";
-        //                       echo "<td>" . $row['image'] . "</td>";
-        //                       echo "<td>" . $row['type'] . "</td>";
-        //                       echo "<td>" . $row['bathroom'] . "</td>";
-        //                       echo "<td>" . $row['bedroom'] . "</td>";
-                              
-        //                   echo "</tr>";
-        //               }
-        //               echo "</tbody>";                            
-        //           echo "</table>";
-        //           // Free result set
-        //           mysqli_free_result($result);
-        //       }
-        //   }
-         //}
-      ?>
+      <?php
+  require_once "php/config.php";
+  if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Retrieve filter values
+    $type = $_POST['type'];
+    $bedroom = $_POST['bedroom'];
+    $bathroom = $_POST['bathroom'];
+    $name = $_POST['name'];
+    $address = $_POST['address'];
+    $price = $_POST['price'];
+
+    // Build the SQL query based on the filter values
+    $sql = "SELECT * FROM posts WHERE
+            type = ? or ? = ''
+            AND bedrooms = ? OR ? = ''
+            AND bathrooms = ? OR ? = ''
+            AND (name LIKE ? OR ? = '')
+            AND (address LIKE ? OR ? = '')
+            AND (price LIKE ? OR ? = '')";
+
+    // Prepare the SQL statement
+    $stmt = $link->prepare($sql);
+
+    // Bind parameters
+    $stmt->bind_param('ssssssssssss',
+        $type, $type,
+        $bedroom, $bedroom,
+        $bathroom, $bathroom,
+        $name, $name,
+        $address, $address,
+        $price, $price
+    );
+
+    // Execute the statement
+    $stmt->execute();
+
+    // Get the result set
+    $result = $stmt->get_result();
+
+    // Fetch and display the results
+    while ($row = $result->fetch_assoc()) {
+        // Display your post data here
+        echo "<p>Name: {$row['name']}</p>";
+        echo "<p>Address: {$row['address']}</p>";
+        echo "<p>Price: {$row['price']}</p>";
+        echo "<p>Type: {$row['type']}</p>";
+        echo "<p>Bedrooms: {$row['bedrooms']}</p>";
+        echo "<p>Bathrooms: {$row['bathrooms']}</p>";
+        echo "<img src='php/{$row['image']}' alt='Post Image'>";
+        echo "<a href='property-single.php?id={$row['id']}'>View Details</a>";
+        echo "<hr>";
+    }
+
+    // Close the statement
+    $stmt->close();
+}
+?>
     </div>
 
     <div class="site-section">
