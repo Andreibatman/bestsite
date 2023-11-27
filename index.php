@@ -169,9 +169,7 @@
       </div>
     </form>
 
-    <div>
-      <h6>Posts List</h6>
-      <hr>
+    
       <?php
   require_once "php/config.php";
   if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -212,9 +210,27 @@
     $result = $stmt->get_result();
 
     // Fetch and display the results
+    echo '<div class="site-section bg-black">';
+    echo '<div class="container">';
+    echo '<div class="row">';
     while ($row = $result->fetch_assoc()) {
         // Display your post data here
-        echo "<p>Name: {$row['name']}</p>";
+        echo '<div class="col-md-4 mb-5">';
+        echo '<div class="media-38289">';
+			  echo "<a href='property-single.php?id={$row['id']}'><img src='php/{$row['image']}' alt='Post Image' class='img-fluid'></a>";
+        echo '<div class="text">';
+        echo '<div class="d-flex justify-content-between mb-3">';
+        echo '<div class="sq d-flex align-items-center"><span class="wrap-icon icon-fullscreen"></span> <span>2911 Sq Ft.</span></div>';
+        echo "<div class='bed d-flex align-items-center'><span class='wrap-icon icon-bed'></span> <span>{$row['bedrooms']}</span></div>";
+        echo "<div class='bath d-flex align-items-center'><span class='wrap-icon icon-bath'></span> <span>{$row['bathrooms']}</span></div>";
+        echo '</div>';
+        echo "<h3 class='mb-3'><a href='property-single.php?id={$row['id']}'>\${$row['price']}</a></h3>";
+        echo "<span class='d-block small address d-flex align-items-center'> <span class='icon-room mr-3 text-primary'></span> <span>{$row['address']}</span></span>";
+        echo '</div>';
+        echo '</div>';
+        echo '</div>';
+
+        /*echo "<p>Name: {$row['name']}</p>";
         echo "<p>Address: {$row['address']}</p>";
         echo "<p>Price: {$row['price']}</p>";
         echo "<p>Type: {$row['type']}</p>";
@@ -222,14 +238,16 @@
         echo "<p>Bathrooms: {$row['bathrooms']}</p>";
         echo "<img src='php/{$row['image']}' alt='Post Image'>";
         echo "<a href='property-single.php?id={$row['id']}'>View Details</a>";
-        echo "<hr>";
+        echo "<hr>";*/
     }
-
+    echo '</div>';
+    echo '</div>';
+    echo '</div>';
     // Close the statement
     $stmt->close();
 }
 ?>
-    </div>
+    
 
     <div class="site-section">
       <div class="container">
