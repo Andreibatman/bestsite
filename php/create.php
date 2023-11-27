@@ -3,7 +3,7 @@
 require_once "config.php";
 
 // Define variables and initialize with empty values
-$name = $address = $price = $type = $bathroom = $bedroom = "";
+$name = $address = $price = $type = $bathroom = $bedroom = $body = "";
 $name_err = $address_err = $price_err = $type_err = $image_err = "";
 
 // Processing form data when form is submitted
@@ -48,6 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Validate bedrooms
     $bedroom = trim($_POST["bedroom"]);
 
+    $body = trim($_POST["body"]);
     // Validate image
     if (!empty($_FILES["image"]["name"])) {
         $target_directory = "uploads/"; // Change this to your desired upload directory
@@ -69,7 +70,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         // Check file size
-        if ($_FILES["image"]["size"] > 500000) {
+        if ($_FILES["image"]["size"] > 50000000) {
             $image_err = "Sorry, your file is too large.";
             $uploadOk = 0;
         }
@@ -100,11 +101,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Check input errors before inserting into the database
     if (empty($name_err) && empty($address_err) && empty($price_err) && empty($type_err) && empty($image_err)) {
         // Prepare an insert statement
-        $sql = "INSERT INTO posts (name, address, price, image, type, bathrooms, bedrooms) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO posts (name, address, price, image, type, bathrooms, bedrooms, body) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
          
         if ($stmt = mysqli_prepare($link, $sql)) {
             // Bind variables to the prepared statement as parameters
-            mysqli_stmt_bind_param($stmt, "sssssss", $param_name, $param_address, $param_price, $param_image, $param_type, $param_bathroom, $param_bedroom);
+            mysqli_stmt_bind_param($stmt, "ssssssss", $param_name, $param_address, $param_price, $param_image, $param_type, $param_body, $param_bathroom, $param_bedroom);
             
             // Set parameters
             $param_name = $name;
@@ -114,6 +115,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $param_bathroom = $bathroom;
             $param_bedroom = $bedroom;
             $param_type = $type;
+            $param_body = $body;
             
             // Attempt to execute the prepared statement
             if (mysqli_stmt_execute($stmt)) {
@@ -163,6 +165,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <div class="form-group">
                             <label>Type</label>
                             <input type="text" name="type" class="form-control" value="<?php echo $type; ?>">
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <input type="text" name="body" class="form-control" value="<?php echo $body; ?>">
                         </div>
                         <div class="form-group">
                             <label>Address</label>

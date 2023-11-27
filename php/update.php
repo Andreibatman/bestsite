@@ -3,8 +3,8 @@
 require_once "config.php";
 
 // Define variables and initialize with empty values
-$name = $address = $price = $type = $bathroom = $bedroom = "";
-$name_err = $address_err = $price_err = $type_err = $image_err = "";
+$name = $address = $price = $type = $bathroom = $bedroom = $body = "";
+$name_err = $address_err = $price_err = $type_err = $image_err = $body_err = "";
 
 // Processing form data when form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -74,7 +74,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         // Check file size
-        if ($_FILES["image"]["size"] > 500000) {
+        if ($_FILES["image"]["size"] > 50000000) {
             $image_err = "Sorry, your file is too large.";
             $uploadOk = 0;
         }
@@ -100,14 +100,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
+    // Validate body
+    $body = trim($_POST["body"]);
+    if (empty($body)) {
+        $body_err = "Please enter a body for the post.";
+    }
+
     // Check input errors before inserting into the database
-    if (empty($name_err) && empty($address_err) && empty($price_err) && empty($type_err) && empty($image_err)) {
+    if (empty($name_err) && empty($address_err) && empty($price_err) && empty($type_err) && empty($image_err) && empty($body_err)) {
         // Prepare an update statement
-        $sql = "UPDATE posts SET name=?, address=?, price=?, image=?, type=?, bathrooms=?, bedrooms=? WHERE id=?";
+        $sql = "UPDATE posts SET name=?, address=?, price=?, image=?, type=?, bathrooms=?, bedrooms=?, body=? WHERE id=?";
 
         if ($stmt = mysqli_prepare($link, $sql)) {
             // Bind variables to the prepared statement as parameters
-            mysqli_stmt_bind_param($stmt, "sssssssi", $param_name, $param_address, $param_price, $param_image, $param_type, $param_bathroom, $param_bedroom, $param_id);
+            mysqli_stmt_bind_param($stmt, "ssssssssi", $param_name, $param_address, $param_price, $param_image, $param_type, $param_bathroom, $param_bedroom, $param_body, $param_id);
 
             // Set parameters
             $param_name = $name;
@@ -118,6 +124,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $param_type = $type;
             $param_bathroom = $bathroom;
             $param_bedroom = $bedroom;
+            $param_body = $body;
 
             // Attempt to execute the prepared statement
             if (mysqli_stmt_execute($stmt)) {
@@ -167,9 +174,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $type = $row['type'];
                     $bathroom = $row['bathrooms'];
                     $bedroom = $row['bedrooms'];
+                    $body = $row['body'];
                 } else {
                     // URL doesn't contain valid id. Redirect to the error page
-                    header("location: error.php");
                     exit();
                 }
             } else {
@@ -184,12 +191,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         mysqli_close($link);
     } else {
         // URL doesn't contain the id parameter. Redirect to the error page
-        header("location: error.php");
         exit();
     }
 }
 ?>
- 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -218,7 +224,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         </div>
                         <div class="form-group">
                             <label>Type</label>
-                            <input type="text" name="type" class="form-control" value="<?php echo $name; ?>">
+                            <input type="text" name="type" class="form-control" value="<?php echo $type; ?>">
                         </div>
                         <div class="form-group">
                             <label>Address</label>
@@ -233,26 +239,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <div class="form-group">
                             <label>Bedrooms</label>
                             <input type="text" name="bedroom" class="form-control" value="<?php echo $bedroom; ?>">
-                            
                         </div>
                         <div class="form-group">
                             <label>Bathrooms</label>
                             <input type="text" name="bathroom" class="form-control" value="<?php echo $bathroom; ?>">
                         </div>
                         <div class="form-group">
+                            <label>Body</label>
+                            <input type="text" name="body" class="form-control <?php echo (!empty($body_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $body; ?>">
+                            <span class="invalid-feedback"><?php echo $body_err;?></span>
+                        </div>
+                        <div class="form-group">
                             <label>Image</label>
                             <input type="file" name="image" class="form-control <?php echo (!empty($image_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $image; ?>">
                             <span class="invalid-feedback"><?php echo $image_err;?></span>
-                        </div>
-                        <div class="form-group">
-
                         </div>
                         <input type="hidden" name="id" value="<?php echo $id; ?>"/>
                         <input type="submit" class="btn btn-primary" value="Submit">
                         <a href="dashboard.php" class="btn btn-secondary ml-2">Cancel</a>
                     </form>
                 </div>
-            </div>        
+            </div>
         </div>
     </div>
 </body>

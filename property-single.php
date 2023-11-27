@@ -106,40 +106,68 @@ require_once "php/config.php";
 // Check if the ID parameter is provided
 if (isset($_GET["id"])) {
     // Retrieve the post ID from the URL
-    $post_id = $_GET["id"];
+    $post_id = $_GET['id'];
 
-    // Prepare a SELECT statement
-    $sql = "SELECT * FROM posts WHERE id = ?";
+// SQL query to fetch post details and agent information
+$sql = "
+    SELECT 
+        posts.*, 
+        users.username AS agent_name
+    FROM posts
+    JOIN users ON posts.user_id = users.id
+    WHERE posts.id = ?
+";
 
-    if ($stmt = mysqli_prepare($link, $sql)) {
-        // Bind variables to the prepared statement as parameters
-        mysqli_stmt_bind_param($stmt, "i", $post_id);
+if ($stmt = mysqli_prepare($link, $sql)) {
+    // Bind variables to the prepared statement as parameters
+    mysqli_stmt_bind_param($stmt, "i", $post_id);
 
-        // Attempt to execute the prepared statement
-        if (mysqli_stmt_execute($stmt)) {
-            // Get the result set
-            $result = mysqli_stmt_get_result($stmt);
+    // Attempt to execute the prepared statement
+    if (mysqli_stmt_execute($stmt)) {
+        // Get the result set
+        $result = mysqli_stmt_get_result($stmt);
 
-            // Fetch the post data
-            if ($row = mysqli_fetch_assoc($result)) {
-                // Display the post details
-                echo "<h2>{$row['name']}</h2>";
-                echo "<p>Address: {$row['address']}</p>";
-                echo "<p>Price: {$row['price']}</p>";
-                echo "<p>Type: {$row['type']}</p>";
-                echo "<p>Bedrooms: {$row['bedrooms']}</p>";
-                echo "<p>Bathrooms: {$row['bathrooms']}</p>";
-                echo "<img src='php/{$row['image']}' alt='Property Image'>";
-            } else {
-                echo "No post found with the provided ID.";
-            }
+        // Fetch the post data
+        if ($row = mysqli_fetch_assoc($result)) {
+            // Display the post details dynamically
+            echo '<div class="site-section bg-black">';
+            echo '<div class="container">';
+            echo '<div class="row">';
+            echo '<div class="col-md-8">';
+            echo '<div class="media-38289">';
+            echo "<a href='property-single.php?id={$row['id']}'><img src='php/{$row['image']}' alt='Post Image' class='img-fluid'></a>";
+            echo '<div class="text">';
+            echo '<div class="d-flex justify-content-between mb-3">';
+            echo '<div class="sq d-flex align-items-center"><span class="wrap-icon icon-fullscreen"></span> <span>2911 Sq Ft.</span></div>';
+            echo "<div class='bed d-flex align-items-center'><span class='wrap-icon icon-bed'></span> <span>{$row['bedrooms']}</span></div>";
+            echo "<div class='bath d-flex align-items-center'><span class='wrap-icon icon-bath'></span> <span>{$row['bathrooms']}</span></div>";
+            echo '</div>';
+            echo "<h3 class='mb-3'><a href='property-single.php?id={$row['id']}'>\${$row['price']}</a></h3>";
+            echo "<span class='d-block small address d-flex align-items-center'> <span class='icon-room mr-3 text-primary'></span> <span>{$row['address']}</span></span>";
+            echo '<p><a href="#" class="btn btn-primary text-white">Contact Agent</a></p>';
+            // Display agent details
+            //echo '<div class="col-md-3 ml-auto">';
+            echo '<h3 class="mb-5">Agent</h3>';
+            echo '<div class="person-29381">';
+            echo "<h3><a href='#'>{$row['agent_name']}</a></h3>";
+            //echo '</div>';
+            echo '</div>';
+            echo '</div>';
+            echo '</div>';
+            echo '</div>';
+            echo '</div>';
+            echo '</div>';
+            echo '</div>';
         } else {
-            echo "Oops! Something went wrong. Please try again later.";
+            echo "No post found with the provided ID.";
         }
-
-        // Close the statement
-        mysqli_stmt_close($stmt);
+    } else {
+        echo "Oops! Something went wrong. Please try again later.";
     }
+
+    // Close statement
+    mysqli_stmt_close($stmt);
+}
 
     // Close the connection
     mysqli_close($link);
