@@ -34,7 +34,23 @@ if (isset($_GET["id"]) && !empty(trim($_GET["id"]))) {
                 $bedroom = $row['bedrooms'];
                 $body = $row['body'];
                 $image = $row['image'];  // Added line to retrieve image URL
-
+                $surface = $row['surface'];
+                $terrain = $row['terrain'];
+                $rooms = $row['rooms'];
+                $parking = $row['parking'];
+                $partitioning = $row['partitioning'];
+                $floor = $row['floor'];
+                $comfort = $row['comfort'];
+                $year = $row['year'];
+                $structure = $row['structure'];
+                $bridge = $row['bridge'];
+                $seismic = $row['seismic'];
+                $heating = $row['heating'];
+                $furnished = $row['furnished'];
+                $termostem = $row['termostem'];
+                $front = $row['front'];
+                $balcony = $row['balcony'];
+                $free_since = $row['free_since'];    
             } else {
                 // URL doesn't contain valid id. Redirect to error page
                 exit();
@@ -95,6 +111,74 @@ if (isset($_GET["id"]) && !empty(trim($_GET["id"]))) {
                     <div class="form-group">
                         <label>Address</label>
                         <p><?php echo $address; ?></p>
+                    </div>
+                    <div class="form-group">
+                        <label>Surface (m^2)</label>
+                        <p><?php echo $surface; ?></p>
+                    </div>
+                    <div class="form-group">
+                        <label>Terrain</label>
+                        <p><?php echo $terrain; ?></p>
+                    </div>
+                    <div class="form-group">
+                        <label>Rooms</label>
+                        <p><?php echo $rooms; ?></p>
+                    </div>
+                    <div class="form-group">
+                        <label>Parking</label>
+                        <p><?php echo $parking; ?></p>
+                    </div>
+                    <div class="form-group">
+                        <label>Partitioning</label>
+                        <p><?php echo $partitioning; ?></p>
+                    </div>
+                    <div class="form-group">
+                        <label>Floor</label>
+                        <p><?php echo $floor; ?></p>
+                    </div>
+                    <div class="form-group">
+                        <label>Comfort</label>
+                        <p><?php echo $comfort; ?></p>
+                    </div>
+                    <div class="form-group">
+                        <label>Year</label>
+                        <p><?php echo $year; ?></p>
+                    </div>
+                    <div class="form-group">
+                        <label>Structure</label>
+                        <p><?php echo $structure; ?></p>
+                    </div>
+                    <div class="form-group">
+                        <label>Bridge</label>
+                        <p><?php echo $bridge; ?></p>
+                    </div>
+                    <div class="form-group">
+                        <label>Seismic</label>
+                        <p><?php echo $seismic; ?></p>
+                    </div>
+                    <div class="form-group">
+                        <label>Heating</label>
+                        <p><?php echo $heating; ?></p>
+                    </div>
+                    <div class="form-group">
+                        <label>Furnished</label>
+                        <p><?php echo $furnished; ?></p>
+                    </div>
+                    <div class="form-group">
+                        <label>Termostem</label>
+                        <p><?php echo $termostem; ?></p>
+                    </div>
+                    <div class="form-group">
+                        <label>Front Door</label>
+                        <p><?php echo $front; ?></p>
+                    </div>
+                    <div class="form-group">
+                        <label>Free Since</label>
+                        <p><?php echo $free_since; ?></p>
+                    </div>
+                    <div class="form-group">
+                        <label>Balconies</label>
+                        <p><?php echo $balcony; ?></p>
                     </div>
                     <div class="form-group">
                         <label>Price</label>
