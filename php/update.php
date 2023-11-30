@@ -127,21 +127,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty($body)) {
         $body_err = "Please enter a body for the post.";
     }
-
+    $category = isset($_POST["for_sale"]) ? "For Sale" : "For Rent";
     // Check input errors before inserting into the database
     if (empty($name_err) && empty($address_err) && empty($price_err) && empty($type_err) && empty($image_err) && empty($body_err)) {
         // Prepare an update statement
-        $sql = "UPDATE posts SET name = ?, address = ?, price = ?, image = ?, type = ?, bedrooms = ?, bathrooms = ?, body = ?, surface = ?, terrain = ?, rooms = ?, parking = ?, partitioning = ?, floor = ?, comfort = ?, year = ?, structure = ?, bridge = ?, seismic = ?, heating = ?, furnished = ?, termostem = ?, front = ?, balcony = ?, free_since = ? WHERE id = ?";
+        $sql = "UPDATE posts SET name = ?, address = ?, price = ?, image = ?, type = ?, bedrooms = ?, bathrooms = ?, body = ?, surface = ?, terrain = ?, rooms = ?, parking = ?, partitioning = ?, floor = ?, comfort = ?, year = ?, structure = ?, bridge = ?, seismic = ?, heating = ?, furnished = ?, termostem = ?, front = ?, balcony = ?, free_since = ?, category = ? WHERE id = ?";
 
         if ($stmt = mysqli_prepare($link, $sql)) {
             // Bind variables to the prepared statement as parameters
-            mysqli_stmt_bind_param($stmt, "sssssssssssssssssssssssssi", 
+            mysqli_stmt_bind_param($stmt, "ssssssssssssssssssssssssssi", 
             $param_name, $param_address, $param_price, $param_image, $param_type, 
             $param_bedroom, $param_bathroom, $param_body, $param_surface, $param_terrain, 
             $param_rooms, $param_parking, $param_partitioning, $param_floor, $param_comfort, 
             $param_year, $param_structure, $param_bridge, $param_seismic, $param_heating, 
             $param_furnished, $param_termostem, $param_front, $param_balcony, 
-            $param_free_since, $param_id);
+            $param_free_since, $param_category, $param_id);
 
 
             // Set parameters
@@ -171,7 +171,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $param_balcony = $balcony;
             $param_free_since = $free_since;
             $param_id = $id;
-
+            $param_category = isset($_POST["for_sale"]) ? "For Sale" : "For Rent";
             // Attempt to execute the prepared statement
             if (mysqli_stmt_execute($stmt)) {
                 // Posts updated successfully. Redirect to the landing page
@@ -238,6 +238,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $front = $row['front'];
                     $balcony = $row['balcony'];
                     $free_since = $row['free_since'];
+                    $category = $row['category'];
                 } else {
                     // URL doesn't contain valid id. Redirect to the error page
                     exit();
@@ -401,6 +402,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <label>Image</label>
                             <input type="file" name="image" class="form-control <?php echo (!empty($image_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $image; ?>">
                             <span class="invalid-feedback"><?php echo $image_err;?></span>
+                        </div>
+                        <div class="form-group">
+                            <label>For Sale</label>
+                            <input type="checkbox" name="for_sale" <?php echo ($category === 'For Sale') ? 'checked' : ''; ?>>
                         </div>
                         <input type="hidden" name="id" value="<?php echo $id; ?>"/>
                         <input type="submit" class="btn btn-primary" value="Submit">

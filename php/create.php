@@ -73,7 +73,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         // Check file size
-        if ($_FILES["image"]["size"] > 50000000) {
+        if ($_FILES["image"]["size"] > 500000000) {
             $image_err = "Sorry, your file is too large.";
             $uploadOk = 0;
         }
@@ -104,18 +104,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Check input errors before inserting into the database
     if (empty($name_err) && empty($address_err) && empty($price_err) && empty($type_err) && empty($image_err)) {
         // Prepare an insert statement
-        $sql = "INSERT INTO posts (name, address, price, image, type, bathrooms, bedrooms, body, surface, terrain, rooms, parking, partitioning, floor, comfort, year, structure, bridge, seismic, heating, furnished, termostem, front, balcony, free_since) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO posts (name, address, price, image, type, bathrooms, bedrooms, body, surface, terrain, rooms, parking, partitioning, floor, comfort, year, structure, bridge, seismic, heating, furnished, termostem, front, balcony, free_since, category) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
          
         if ($stmt = mysqli_prepare($link, $sql)) {
             // Bind variables to the prepared statement as parameters
-            mysqli_stmt_bind_param($stmt, "sssssssssssssssssssssssss", 
+            mysqli_stmt_bind_param($stmt, "ssssssssssssssssssssssssss", 
                 $param_name, $param_address, $param_price, $param_image, $param_type, 
                 $param_bathroom, $param_bedroom, $param_body, 
                 $param_surface, $param_terrain, $param_rooms, 
                 $param_parking, $param_partitioning, $param_floor, 
                 $param_comfort, $param_year, $param_structure, $param_bridge, 
                 $param_seismic, $param_heating, $param_furnished, $param_termostem, 
-                $param_front, $param_balcony, $param_free_since);
+                $param_front, $param_balcony, $param_free_since, $param_category);
             
             // Set parameters
             $param_name = $name;
@@ -143,10 +143,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $param_front = $_POST["front"];
             $param_balcony = $_POST["balcony"];
             $param_free_since = $_POST["free_since"];
-            
+            $param_category = isset($_POST["for_sale"]) ? "For Sale" : "For Rent";
             // Attempt to execute the prepared statement
             if (mysqli_stmt_execute($stmt)) {
                 // Records created successfully. Redirect to the landing page
+                session_start();
+                $user_id = $_SESSION["id"];
+
+                // Update the 'property' column in the 'users' table
+                $update_sql = "UPDATE users SET property = property + 1 WHERE id = ?";
+                if ($update_stmt = mysqli_prepare($link, $update_sql)) {
+                    mysqli_stmt_bind_param($update_stmt, "i", $user_id);
+                    mysqli_stmt_execute($update_stmt);
+                    mysqli_stmt_close($update_stmt);
+                }
+                mysqli_stmt_close($stmt);
                 header("location: dashboard.php");
                 exit();
             } else {
@@ -306,8 +317,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <input type="file" name="image" class="form-control <?php echo (!empty($image_err)) ? 'is-invalid' : ''; ?>">
                             <span class="invalid-feedback"><?php echo $image_err;?></span>
                         </div>
+                        <div class="form-group">
+                            <label>For Sale</label>
+                            <input type="checkbox" name="for_sale" checked>
+                        </div>
                         <input type="submit" class="btn btn-primary" value="Submit">
-                        <a href="dashboard.php" class="btn btn-secondary ml-2">Cancel</a>
+                        <a href="../index.php" class="btn btn-secondary ml-2">Cancel</a>
                     </form>
                 </div>
             </div>        

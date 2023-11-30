@@ -155,6 +155,7 @@
                   <input name="price" type="text" class="form-control" placeholder="Price">
                 </div>  
              </div>
+             <input type="hidden" name="status" type="text" class="form-control" value="For Rent" text="For Rent" id="status-filter">
              <div class="row">
                <div class="col-md-4">
                  <input type="submit" class="btn btn-black py-3 btn-block" value="Submit">
@@ -178,31 +179,38 @@
     $address = $_POST['address'];
     $price = $_POST['price'];
 
+    $statusFilter = '';
+    if (isset($_POST['status']) && ($_POST['status'] == 'For Rent' || $_POST['status'] == 'For Sale')) {
+        $statusFilter = $_POST['status'];
+    }
+    #echo "Generated SQL: " . isset($_POST['status']) . "<br>" . $_POST['status'] . "<br>";
     // Build the SQL query based on the filter values
     $sql = "SELECT * FROM posts WHERE
-            type = ? or ? = ''
-            AND bedrooms = ? OR ? = ''
-            AND bathrooms = ? OR ? = ''
+            ((type = ? or ? = '')
+            AND (bedrooms = ? OR ? = '')
+            AND (bathrooms = ? OR ? = '')
             AND (name LIKE ? OR ? = '')
             AND (address LIKE ? OR ? = '')
-            AND (price LIKE ? OR ? = '')";
-
+            AND (price LIKE ? OR ? = '')
+            AND (category LIKE ?))";
+    
     // Prepare the SQL statement
     $stmt = $link->prepare($sql);
 
     // Bind parameters
-    $stmt->bind_param('ssssssssssss',
+    $stmt->bind_param('sssssssssssss',
         $type, $type,
         $bedroom, $bedroom,
         $bathroom, $bathroom,
         $name, $name,
         $address, $address,
-        $price, $price
+        $price, $price,
+        $statusFilter
     );
 
     // Execute the statement
     $stmt->execute();
-
+    #echo "Generated SQL: " . $stmt->sqlstate . "<br>";
     // Get the result set
     $result = $stmt->get_result();
 
@@ -626,7 +634,17 @@
     </footer>
 
     </div>
+    <script>
+    document.getElementById('rent-tab').addEventListener('click', function() {
+      document.getElementById('status-filter').value = 'For Rent';
+      document.getElementById('status-filter').text = 'For Rent';
+    });
 
+    document.getElementById('sale-tab').addEventListener('click', function() {
+      document.getElementById('status-filter').value = 'For Sale';
+      document.getElementById('status-filter').text = 'For Sale';
+    });
+  </script>
     <script src="js/jquery-3.3.1.min.js"></script>
     <script src="js/jquery-migrate-3.0.0.js"></script>
     <script src="js/popper.min.js"></script>

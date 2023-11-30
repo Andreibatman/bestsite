@@ -1,3 +1,91 @@
+<?php
+// Include config file
+require_once "php/config.php";
+
+// Define variable and initialize with empty value
+$post_id = $title = $name = $category = $image = $body = $price = $bathrooms = $bedrooms = $surface = $rooms = $parking = $partitioning = $floor = $comfort = $year = $structure = $bridge = $seismic = $heating = $furnished = $termostem = $front = $free_since = $balcony = $address = $user_id = $user_name = $facebook = $twitter = $instagram = $phone = "";
+
+// Check existence of id parameter before processing further
+if (isset($_GET["id"]) && !empty(trim($_GET["id"]))) {
+    // Get URL parameter
+    $id = trim($_GET["id"]);
+
+    // Prepare a select statement
+    $sql = "SELECT posts.*, users.name AS user_name, users.facebook, users.twitter, users.instagram, users.phone, users.image AS user_image, users.property AS num_properties
+            FROM posts
+            LEFT JOIN users ON posts.user_id = users.id
+            WHERE posts.id = ?";
+
+    if ($stmt = mysqli_prepare($link, $sql)) {
+        // Bind variables to the prepared statement as parameters
+        mysqli_stmt_bind_param($stmt, "i", $param_id);
+
+        // Set parameters
+        $param_id = $id;
+
+        // Attempt to execute the prepared statement
+        if (mysqli_stmt_execute($stmt)) {
+            $result = mysqli_stmt_get_result($stmt);
+
+            if (mysqli_num_rows($result) == 1) {
+                /* Fetch result row as an associative array */
+                $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+
+                // Retrieve individual field values
+                $post_id = $row["id"];
+                $name = $row["name"];
+                $type = $row["type"];
+                $category = $row["category"];
+                $image = $row["image"];
+                $body = $row["body"];
+                $price = $row["price"];
+                $bathrooms = $row["bathrooms"];
+                $bedrooms = $row["bedrooms"];
+                $surface = $row["surface"];
+                $rooms = $row["rooms"];
+                $parking = $row["parking"];
+                $partitioning = $row["partitioning"];
+                $floor = $row["floor"];
+                $comfort = $row["comfort"];
+                $year = $row["year"];
+                $structure = $row["structure"];
+                $bridge = $row["bridge"];
+                $seismic = $row["seismic"];
+                $heating = $row["heating"];
+                $furnished = $row["furnished"];
+                $termostem = $row["termostem"];
+                $front = $row["front"];
+                $free_since = $row["free_since"];
+                $balcony = $row["balcony"];
+                $address = $row["address"];
+                $user_id = $row["user_id"];
+                $user_name = $row["user_name"];
+                $facebook = $row["facebook"];
+                $twitter = $row["twitter"];
+                $instagram = $row["instagram"];
+                $phone = $row["phone"];
+                $user_image = $row["user_image"];
+                $num_properties = $row["num_properties"];
+            } else {
+                // URL doesn't contain valid id. Redirect to error page
+                exit();
+            }
+
+        } else {
+            echo "Oops! Something went wrong. Please try again later.";
+        }
+    }
+
+    // Close statement
+    mysqli_stmt_close($stmt);
+
+    // Close connection
+    mysqli_close($link);
+} else {
+    // URL doesn't contain id parameter. Redirect to error page
+    exit();
+}
+?>
 <!doctype html>
 <html lang="en">
 
@@ -75,19 +163,19 @@
 
       </header>
 
-    <div class="ftco-blocks-cover-1">
-      <div class="site-section-cover overlay" data-stellar-background-ratio="0.5" style="background-image: url('images/hero_1.jpg')">
+      <div class="ftco-blocks-cover-1">
+      <div class="site-section-cover overlay" data-stellar-background-ratio="0.5" style='background-image: url("php/<?php echo $image;?>")'>
         <div class="container">
           <div class="row align-items-center justify-content-center text-center">
             <div class="col-md-7">
-              <span class="h4 text-primary mb-4 d-block">$1,570,000</span>
-              <h1 class="mb-2">Beautiful House In Australia</h1>
-              <p class="text-center mb-5"><span class="small address d-flex align-items-center justify-content-center"> <span class="icon-room mr-3 text-primary"></span> <span>156/10 Sapling Street, Harrison, ACT 2914</span></span></p>
+              <span class="h4 text-primary mb-4 d-block">$<?php echo $price;?></span>
+              <h1 class="mb-2"><?php echo $name;?></h1>
+              <p class="text-center mb-5"><span class="small address d-flex align-items-center justify-content-center"> <span class="icon-room mr-3 text-primary"></span> <span><?php echo $address; ?></span></span></p>
             
                 <div class="d-flex media-38289 justify-content-around mb-5">
-                  <div class="sq d-flex align-items-center"><span class="wrap-icon icon-fullscreen"></span> <span>2911 Sq Ft.</span></div>
-                  <div class="bed d-flex align-items-center"><span class="wrap-icon icon-bed"></span> <span>2.</span></div>
-                  <div class="bath d-flex align-items-center"><span class="wrap-icon icon-bath"></span> <span>2</span></div>
+                  <div class="sq d-flex align-items-center"><span class="wrap-icon icon-fullscreen"></span> <span><?php echo $surface;?> Sq Ft.</span></div>
+                  <div class="bed d-flex align-items-center"><span class="wrap-icon icon-bed"></span> <span><?php echo $bedrooms;?></span></div>
+                  <div class="bath d-flex align-items-center"><span class="wrap-icon icon-bath"></span> <span><?php echo $bathrooms;?></span></div>
                 </div>
               <p><a href="#" class="btn btn-primary text-white px-4 py-3">Buy Now</a></p>
             </div>
@@ -97,84 +185,36 @@
     </div>
     
 
-    <?php
-// property_single.php
+    
+    <div class="site-section">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            <p><?php echo $body;?></p>
+            <p><?php echo $rooms;?> Rooms</p>
+            <p><a href="#" class="btn btn-primary text-white">Contact Agent</a></p>
+          </div>
+          <div class="col-md-3 ml-auto">
+            <h3 class="mb-5">Agent</h3>
+            <div class="person-29381">
+              <div class="media-39912">
+                <img src="php/<?php echo $user_image?>" alt="Image" class="img-fluid">
+              </div>
+              <h3><a href="#"><?php echo $user_name?></a></h3>
+              <span class="meta d-block mb-4"><?php echo $num_properties?> Properties</span>
+              <div class="social-32913">
+                <a href="<?php echo $facebook?>"><span class="icon-facebook"></span></a>
+                <a href="<?php echo $twitter?>"><span class="icon-twitter"></span></a>
+                <a href="<?php echo $instagram?>"><span class="icon-instagram"></span></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
 
-// Include config file
-require_once "php/config.php";
-
-// Check if the ID parameter is provided
-if (isset($_GET["id"])) {
-    // Retrieve the post ID from the URL
-    $post_id = $_GET['id'];
-
-// SQL query to fetch post details and agent information
-$sql = "
-    SELECT 
-        posts.*, 
-        users.username AS agent_name
-    FROM posts
-    JOIN users ON posts.user_id = users.id
-    WHERE posts.id = ?
-";
-
-if ($stmt = mysqli_prepare($link, $sql)) {
-    // Bind variables to the prepared statement as parameters
-    mysqli_stmt_bind_param($stmt, "i", $post_id);
-
-    // Attempt to execute the prepared statement
-    if (mysqli_stmt_execute($stmt)) {
-        // Get the result set
-        $result = mysqli_stmt_get_result($stmt);
-
-        // Fetch the post data
-        if ($row = mysqli_fetch_assoc($result)) {
-            // Display the post details dynamically
-            echo '<div class="site-section bg-black">';
-            echo '<div class="container">';
-            echo '<div class="row">';
-            echo '<div class="col-md-8">';
-            echo '<div class="media-38289">';
-            echo "<a href='property-single.php?id={$row['id']}'><img src='php/{$row['image']}' alt='Post Image' class='img-fluid'></a>";
-            echo '<div class="text">';
-            echo '<div class="d-flex justify-content-between mb-3">';
-            echo '<div class="sq d-flex align-items-center"><span class="wrap-icon icon-fullscreen"></span> <span>2911 Sq Ft.</span></div>';
-            echo "<div class='bed d-flex align-items-center'><span class='wrap-icon icon-bed'></span> <span>{$row['bedrooms']}</span></div>";
-            echo "<div class='bath d-flex align-items-center'><span class='wrap-icon icon-bath'></span> <span>{$row['bathrooms']}</span></div>";
-            echo '</div>';
-            echo "<h3 class='mb-3'><a href='property-single.php?id={$row['id']}'>\${$row['price']}</a></h3>";
-            echo "<span class='d-block small address d-flex align-items-center'> <span class='icon-room mr-3 text-primary'></span> <span>{$row['address']}</span></span>";
-            echo '<p><a href="#" class="btn btn-primary text-white">Contact Agent</a></p>';
-            // Display agent details
-            //echo '<div class="col-md-3 ml-auto">';
-            echo '<h3 class="mb-5">Agent</h3>';
-            echo '<div class="person-29381">';
-            echo "<h3><a href='#'>{$row['agent_name']}</a></h3>";
-            //echo '</div>';
-            echo '</div>';
-            echo '</div>';
-            echo '</div>';
-            echo '</div>';
-            echo '</div>';
-            echo '</div>';
-            echo '</div>';
-        } else {
-            echo "No post found with the provided ID.";
-        }
-    } else {
-        echo "Oops! Something went wrong. Please try again later.";
-    }
-
-    // Close statement
-    mysqli_stmt_close($stmt);
-}
-
-    // Close the connection
-    mysqli_close($link);
-} else {
-    echo "No post ID provided.";
-}
-?>
+    
 <!--     
     <div class="site-section">
       <div class="container">

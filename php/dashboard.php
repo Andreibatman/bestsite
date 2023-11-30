@@ -36,8 +36,19 @@
                     // Include config file
                     require_once "config.php";
                     
+                    // Start session
+                    session_start();
+
+                    // Check if the user is logged in
+                    if (!isset($_SESSION["id"])) {
+                        header("location: login.php"); // Redirect to login page if not logged in
+                        exit();
+                    }
+
+                    // Get the user ID from the session
+                    $user_id = $_SESSION["id"];
                     // Attempt select query execution
-                    $sql = "SELECT * FROM posts";
+                    $sql = "SELECT * FROM posts WHERE user_id = $user_id";
                     if($result = mysqli_query($link, $sql)){
                         if(mysqli_num_rows($result) > 0){
                             echo '<table class="table table-bordered table-striped">';
@@ -78,6 +89,7 @@
                     // Close connection
                     mysqli_close($link);
                     ?>
+                    <a href="../index.php" class="btn btn-secondary ml-2">Cancel</a>
                 </div>
             </div>        
         </div>

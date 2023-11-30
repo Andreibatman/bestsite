@@ -50,7 +50,8 @@ if (isset($_GET["id"]) && !empty(trim($_GET["id"]))) {
                 $termostem = $row['termostem'];
                 $front = $row['front'];
                 $balcony = $row['balcony'];
-                $free_since = $row['free_since'];    
+                $free_since = $row['free_since'];
+                $category = $row['category'];    
             } else {
                 // URL doesn't contain valid id. Redirect to error page
                 exit();
@@ -191,6 +192,10 @@ if (isset($_GET["id"]) && !empty(trim($_GET["id"]))) {
                     <div class="form-group">
                         <label>Bathrooms</label>
                         <p><?php echo $bathroom; ?></p>
+                    </div>
+                    <div class="form-group">
+                        <label>For Sale / For Rent</label>
+                        <p><?php echo $category; ?></p>
                     </div>
                     <p><a href="dashboard.php" class="btn btn-primary">Back</a></p>
                 </div>
