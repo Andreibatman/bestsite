@@ -80,7 +80,6 @@ if (isset($_GET["id"]) && !empty(trim($_GET["id"]))) {
     mysqli_stmt_close($stmt);
 
     // Close connection
-    mysqli_close($link);
 } else {
     // URL doesn't contain id parameter. Redirect to error page
     exit();
@@ -212,45 +211,9 @@ if (isset($_GET["id"]) && !empty(trim($_GET["id"]))) {
         </div>
       </div>
     </div>
-    
 
-    
-<!--     
-    <div class="site-section">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-8">
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Non alias labore similique, laboriosam consequuntur tempora, quas accusantium voluptatibus eius, maiores, minima! Ipsam tempore ex qui voluptatum quo voluptas! Incidunt, pariatur.</p>
-            <p>Dolorem quaerat tenetur corporis praesentium, soluta debitis culpa asperiores, minus delectus quibusdam amet recusandae aliquam voluptatibus dicta quis, facere tempora eum placeat repellendus maxime nesciunt voluptates totam sapiente commodi. Tenetur.</p>
-            <p>Labore natus ullam suscipit distinctio debitis voluptas minima ipsam. Odit, reprehenderit minima distinctio, dolorum ipsam velit, minus labore eum commodi quia quae doloribus impedit blanditiis architecto fugiat delectus provident quas.</p>
-            <p>Asperiores temporibus adipisci dolor quasi assumenda est, itaque corrupti, neque facilis beatae natus voluptatibus aperiam mollitia esse ipsam! Quam perferendis facere sed beatae repudiandae rerum laudantium necessitatibus. Incidunt, dolorem, officiis?</p>
-            <p>Mollitia impedit omnis ullam earum est, quaerat consectetur voluptates quia, dolore asperiores ipsum eligendi quae iste, facere porro debitis nostrum obcaecati culpa eius perspiciatis alias distinctio. Perferendis, magnam mollitia fuga.</p>
-            <p><a href="#" class="btn btn-primary text-white">Contact Agent</a></p>
-          </div>
-          <div class="col-md-3 ml-auto">
-            <h3 class="mb-5">Agent</h3>
-            <div class="person-29381">
-              <div class="media-39912">
-                <img src="images/person_1.jpg" alt="Image" class="img-fluid">
-              </div>
-              <h3><a href="#">Josh Long</a></h3>
-              <span class="meta d-block mb-4">4 Properties</span>
-              <div class="social-32913">
-                <a href="#"><span class="icon-facebook"></span></a>
-                <a href="#"><span class="icon-twitter"></span></a>
-                <a href="#"><span class="icon-instagram"></span></a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div> -->
-
-    
     <div class="site-section bg-black">
       <div class="container">
-
-
         <div class="row justify-content-center">
           <div class="col-md-6 text-center">
             <h3 class="heading-29201 text-center text-white">More Related Properties</h3>
@@ -258,98 +221,49 @@ if (isset($_GET["id"]) && !empty(trim($_GET["id"]))) {
             
           </div>
         </div>
-        
-        <div class="row">
+      <div class="row">
+        <?php
+        // Assuming you have a database connection established
 
-          <div class="col-md-4 mb-5">
-            <div class="media-38289">
-              <a href="property-single.php" class="d-block"><img src="images/img_1.jpg" alt="Image" class="img-fluid"></a>
-              <div class="text">
-                <div class="d-flex justify-content-between mb-3">
-                  <div class="sq d-flex align-items-center"><span class="wrap-icon icon-fullscreen"></span> <span>2911 Sq Ft.</span></div>
-                  <div class="bed d-flex align-items-center"><span class="wrap-icon icon-bed"></span> <span>2.</span></div>
-                  <div class="bath d-flex align-items-center"><span class="wrap-icon icon-bath"></span> <span>2</span></div>
+        // Fetch 6 random posts from the 'posts' table
+        $sql = "SELECT * FROM posts ORDER BY RAND() LIMIT 6";
+        // Check if the query was successful
+        if ($result = mysqli_query($link, $sql)) {
+            // Loop through the fetched posts
+            while ($row = mysqli_fetch_assoc($result)) {
+                ?>
+                <div class="col-md-4 mb-5">
+                    <div class="media-38289">
+                      <a href="property-single.php?id=<?php echo $row['id']; ?>" class="d-block">
+                        <img src="php/<?php echo $row['image']; ?>" alt="Image" class="img-fluid">
+                      </a>
+                      <div class="text">
+                        <div class="d-flex justify-content-between mb-3">
+                          <div class="sq d-flex align-items-center"><span class="wrap-icon icon-fullscreen"></span> <span><?php echo $row['surface'];?> Sq Ft.</span></div>
+                          <div class="bed d-flex align-items-center"><span class="wrap-icon icon-bed"></span> <span><?php echo $row['bedrooms']?></span></div>
+                          <div class="bath d-flex align-items-center"><span class="wrap-icon icon-bath"></span> <span><?php echo $row['bathrooms']?></span></div>
+                        </div>
+                        <h3 class="mb-3"><a href="#">$<?php echo $row['price'];?></a></h3>
+                        <span class="d-block small address d-flex align-items-center"> <span class="icon-room mr-3 text-primary"></span> <span><?php echo $row['address'];?></span></span>
+                      </div>
+                    </div>
                 </div>
-                <h3 class="mb-3"><a href="#">$570,000</a></h3>
-                <span class="d-block small address d-flex align-items-center"> <span class="icon-room mr-3 text-primary"></span> <span>156/10 Sapling Street, Harrison, ACT 2914</span></span>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4 mb-5">
-            <div class="media-38289">
-            <a href="property-single.php" class="d-block"><img src="images/img_2.jpg" alt="Image" class="img-fluid"></a>
-            <div class="text">
-              <div class="d-flex justify-content-between mb-3">
-                <div class="sq d-flex align-items-center"><span class="wrap-icon icon-fullscreen"></span> <span>2911 Sq Ft.</span></div>
-                <div class="bed d-flex align-items-center"><span class="wrap-icon icon-bed"></span> <span>2.</span></div>
-                  <div class="bath d-flex align-items-center"><span class="wrap-icon icon-bath"></span> <span>2</span></div>
-              </div>
-              <h3 class="mb-3"><a href="#">$1,570,000</a></h3>
-              <span class="d-block small address d-flex align-items-center"> <span class="icon-room mr-3 text-primary"></span> <span>156/10 Sapling Street, Harrison, ACT 2914</span></span>
-            </div>
-          </div>
-          </div>
-          <div class="col-md-4 mb-5">
-            <div class="media-38289">
-              <a href="property-single.php" class="d-block"><img src="images/img_3.jpg" alt="Image" class="img-fluid"></a>
-              <div class="text">
-                <div class="d-flex justify-content-between mb-3">
-                  <div class="sq d-flex align-items-center"><span class="wrap-icon icon-fullscreen"></span> <span>2911 Sq Ft.</span></div>
-                  <div class="bed d-flex align-items-center"><span class="wrap-icon icon-bed"></span> <span>2.</span></div>
-                  <div class="bath d-flex align-items-center"><span class="wrap-icon icon-bath"></span> <span>2</span></div>
-                </div>
-                <h3 class="mb-3"><a href="#">$980,000</a></h3>
-                <span class="d-block small address d-flex align-items-center"> <span class="icon-room mr-3 text-primary"></span> <span>156/10 Sapling Street, Harrison, ACT 2914</span></span>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-md-4 mb-5">
-            <div class="media-38289">
-              <a href="property-single.php" class="d-block"><img src="images/img_1.jpg" alt="Image" class="img-fluid"></a>
-              <div class="text">
-                <div class="d-flex justify-content-between mb-3">
-                  <div class="sq d-flex align-items-center"><span class="wrap-icon icon-fullscreen"></span> <span>2911 Sq Ft.</span></div>
-                  <div class="bed d-flex align-items-center"><span class="wrap-icon icon-bed"></span> <span>2.</span></div>
-                  <div class="bath d-flex align-items-center"><span class="wrap-icon icon-bath"></span> <span>2</span></div>
-                </div>
-                <h3 class="mb-3"><a href="#">$570,000</a></h3>
-                <span class="d-block small address d-flex align-items-center"> <span class="icon-room mr-3 text-primary"></span> <span>156/10 Sapling Street, Harrison, ACT 2914</span></span>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4 mb-5">
-            <div class="media-38289">
-            <a href="property-single.php" class="d-block"><img src="images/img_2.jpg" alt="Image" class="img-fluid"></a>
-            <div class="text">
-              <div class="d-flex justify-content-between mb-3">
-                <div class="sq d-flex align-items-center"><span class="wrap-icon icon-fullscreen"></span> <span>2911 Sq Ft.</span></div>
-                <div class="bed d-flex align-items-center"><span class="wrap-icon icon-bed"></span> <span>2.</span></div>
-                  <div class="bath d-flex align-items-center"><span class="wrap-icon icon-bath"></span> <span>2</span></div>
-              </div>
-              <h3 class="mb-3"><a href="#">$1,570,000</a></h3>
-              <span class="d-block small address d-flex align-items-center"> <span class="icon-room mr-3 text-primary"></span> <span>156/10 Sapling Street, Harrison, ACT 2914</span></span>
-            </div>
-          </div>
-          </div>
-          <div class="col-md-4 mb-5">
-            <div class="media-38289">
-              <a href="property-single.php" class="d-block"><img src="images/img_3.jpg" alt="Image" class="img-fluid"></a>
-              <div class="text">
-                <div class="d-flex justify-content-between mb-3">
-                  <div class="sq d-flex align-items-center"><span class="wrap-icon icon-fullscreen"></span> <span>2911 Sq Ft.</span></div>
-                  <div class="bed d-flex align-items-center"><span class="wrap-icon icon-bed"></span> <span>2.</span></div>
-                  <div class="bath d-flex align-items-center"><span class="wrap-icon icon-bath"></span> <span>2</span></div>
-                </div>
-                <h3 class="mb-3"><a href="#">$980,000</a></h3>
-                <span class="d-block small address d-flex align-items-center"> <span class="icon-room mr-3 text-primary"></span> <span>156/10 Sapling Street, Harrison, ACT 2914</span></span>
-              </div>
-            </div>
-          </div>
+            
+                <?php
+            }
+          
+            // Free result set
+            mysqli_free_result($result);
+        } else {
+            echo "Error: " . mysqli_error($link);
+        }
+      
+        // Close the database connection
+        mysqli_close($link);
+        ?>
         </div>
       </div>
     </div>
-
 
     <div class="site-section bg-primary">
       <div class="container block-13">
