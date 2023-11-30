@@ -332,7 +332,54 @@
         
 
         <div class="owl-carousel nonloop-block-14">
-          <div class="media-38289">
+            <?php
+            // Assuming you have a database connection established
+            $link = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);
+
+            // Check the connection
+            if ($link === false) {
+                die("ERROR: Could not connect. " . mysqli_connect_error());
+            }
+          
+            // Fetch 4 random posts from the 'posts' table
+            $sql = "SELECT * FROM posts ORDER BY RAND() LIMIT 4";
+          
+            // Check if the query was successful
+            if ($result = mysqli_query($link, $sql)) {
+                // Loop through the fetched posts
+                while ($row = mysqli_fetch_assoc($result)) {
+            ?>
+                    <div class="media-38289">
+                        <a href="property-single.php?id=<?php echo $row['id']; ?>" class="d-block">
+                            <img src="php/<?php echo $row['image']; ?>" alt="Image" class="img-fluid">
+                        </a>
+                        <div class="text">
+                            <!-- Display other post details as needed -->
+                            <div class="d-flex justify-content-between mb-3">
+                                <div class="sq d-flex align-items-center"><span class="wrap-icon icon-fullscreen"></span> <span><?php echo $row['surface']; ?> Sq Ft.</span></div>
+                                <div class="bed d-flex align-items-center"><span class="wrap-icon icon-bed"></span> <span><?php echo $row['bedrooms']; ?></span></div>
+                                <div class="bath d-flex align-items-center"><span class="wrap-icon icon-bath"></span> <span><?php echo $row['bathrooms']; ?></span></div>
+                            </div>
+                            <h3 class="mb-3"><a href="property-single.php?id=<?php echo $row['id']; ?>"><?php echo '$' . number_format($row['price']); ?></a></h3>
+                            <span class="d-block small address d-flex align-items-center">
+                                <span class="icon-room mr-3 text-primary"></span>
+                                <span><?php echo $row['address']; ?></span>
+                            </span>
+                        </div>
+                    </div>
+            <?php
+                }
+              
+                // Free result set
+                mysqli_free_result($result);
+            } else {
+                echo "Error: " . mysqli_error($link);
+            }
+          
+            // Close the database connection
+            mysqli_close($link);
+            ?>
+          <!-- <div class="media-38289">
             <a href="property-single.php" class="d-block"><img src="images/img_1.jpg" alt="Image" class="img-fluid"></a>
             <div class="text">
               <div class="d-flex justify-content-between mb-3">
@@ -415,7 +462,7 @@
                 <h3 class="mb-3"><a href="#">$980,000</a></h3>
                 <span class="d-block small address d-flex align-items-center"> <span class="icon-room mr-3 text-primary"></span> <span>156/10 Sapling Street, Harrison, ACT 2914</span></span>
               </div>
-            </div>
+            </div> -->
 
         </div>
 
