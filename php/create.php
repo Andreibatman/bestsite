@@ -100,7 +100,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         $image_err = "Please select an image.";
     }
+    $additional_images = array();
+    if (!empty($_FILES["images"]["name"][0])) {
+        $target_directory = "uploads/"; // Change this to your desired upload directory
+        $uploadOk = 1;
 
+        foreach ($_FILES["images"]["name"] as $key => $value) {
+            $target_file = $target_directory . basename($_FILES["images"]["name"][$key]);
+            $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+
+            // Check file size, type, etc. (similar to the existing image validation code)
+
+            if ($uploadOk == 1) {
+                if (move_uploaded_file($_FILES["images"]["tmp_name"][$key], $target_file)) {
+                    // File uploaded successfully, store file path in the $additional_images array
+                    $additional_images[] = $target_file;
+                } else {
+                    echo "Sorry, there was an error uploading one of your files.";
+                    $uploadOk = 0;
+                }
+            }
+        }
+    }
     // Check input errors before inserting into the database
     if (empty($name_err) && empty($address_err) && empty($price_err) && empty($type_err) && empty($image_err)) {
         // Prepare an insert statement
@@ -146,6 +167,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $param_category = isset($_POST["for_sale"]) ? "For Sale" : "For Rent";
             // Attempt to execute the prepared statement
             if (mysqli_stmt_execute($stmt)) {
+                $post_id = mysqli_insert_id($link);
                 // Records created successfully. Redirect to the landing page
                 session_start();
                 $user_id = $_SESSION["id"];
@@ -156,6 +178,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     mysqli_stmt_bind_param($update_stmt, "i", $user_id);
                     mysqli_stmt_execute($update_stmt);
                     mysqli_stmt_close($update_stmt);
+                }
+                
+                echo "Post ID: $post_id<br>";
+                if (!empty($post_id) && !empty($additional_images)) {
+                    $image_insert_sql = "INSERT INTO post_images (post_id, image_path) VALUES (?, ?)";
+                    $image_insert_stmt = mysqli_prepare($link, $image_insert_sql);
+                            
+                    if ($image_insert_stmt) {
+                        mysqli_stmt_bind_param($image_insert_stmt, "is", $post_id, $additional_image_path);
+                    
+                        foreach ($additional_images as $additional_image_path) {
+                            if (mysqli_stmt_execute($image_insert_stmt)) {
+                                // Success
+                            } else {
+                                // Error inserting into post_images
+                                echo "Error inserting into post_images: " . mysqli_error($link);
+                            }
+                        }
+                    
+                        mysqli_stmt_close($image_insert_stmt);
+                    } else {
+                        // Error preparing the statement
+                        echo "Error preparing post_images insert statement: " . mysqli_error($link);
+                    }
                 }
                 mysqli_stmt_close($stmt);
                 header("location: dashboard.php");
@@ -313,9 +359,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <input type="text" name="bathroom" class="form-control" value="<?php echo $bathroom; ?>">
                         </div>
                         <div class="form-group">
-                            <label>Image</label>
+                            <label>Thumbnail</label>
                             <input type="file" name="image" class="form-control <?php echo (!empty($image_err)) ? 'is-invalid' : ''; ?>">
                             <span class="invalid-feedback"><?php echo $image_err;?></span>
+                        </div>
+                        <div class="form-group">
+                            <label>Additional Images (multiple)</label>
+                            <input type="file" name="images[]" class="form-control" multiple>
                         </div>
                         <div class="form-group">
                             <label>For Sale</label>

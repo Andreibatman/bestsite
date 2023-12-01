@@ -2,6 +2,16 @@
 // Include config file
 require_once "config.php";
 
+function deleteOldImages($link, $post_id)
+{
+    $sql = "DELETE FROM post_images WHERE post_id = ?";
+    if ($stmt = mysqli_prepare($link, $sql)) {
+        mysqli_stmt_bind_param($stmt, "i", $post_id);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_close($stmt);
+    }
+}
+
 // Define variables and initialize with empty values
 $name = $address = $price = $type = $bathroom = $bedroom = $body = "";
 $surface = $terrain = $rooms = $parking = $partitioning = $floor = $comfort = "";
@@ -77,44 +87,43 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $input_image = $_FILES["image"]["name"];
 
     if (!empty($input_image)) {
+        $old_image = $_POST["old_image"];
+        
+        if (!empty($old_image) && file_exists($old_image)) {
+            unlink($old_image);
+        }
+
         $target_directory = "uploads/";
         $target_file = $target_directory . basename($input_image);
         $uploadOk = 1;
         $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 
-        // Check if the file is an actual image or fake image
         $check = getimagesize($_FILES["image"]["tmp_name"]);
         if ($check === false) {
             $image_err = "File is not an image.";
             $uploadOk = 0;
         }
 
-        // Check if the file already exists
         if (file_exists($target_file)) {
             $image_err = "Sorry, file already exists.";
             $uploadOk = 0;
         }
 
-        // Check file size
         if ($_FILES["image"]["size"] > 50000000) {
             $image_err = "Sorry, your file is too large.";
             $uploadOk = 0;
         }
 
-        // Allow certain file formats
         $allowed_formats = array("jpg", "jpeg", "png", "gif");
         if (!in_array($imageFileType, $allowed_formats)) {
             $image_err = "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
             $uploadOk = 0;
         }
 
-        // Check if $uploadOk is set to 0 by an error
         if ($uploadOk == 0) {
             echo "Sorry, your file was not uploaded.";
         } else {
-            // If everything is ok, try to upload the file
             if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
-                // File uploaded successfully, store file path in the database
                 $image = $target_file;
             } else {
                 echo "Sorry, there was an error uploading your file.";
@@ -128,6 +137,50 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $body_err = "Please enter a body for the post.";
     }
     $category = isset($_POST["for_sale"]) ? "For Sale" : "For Rent";
+
+    // Validate additional images for the carousel
+    $images = array();
+    if (!empty(array_filter($_FILES['images']['name']))) {
+        $target_directory = "uploads/";
+
+        foreach ($_FILES['images']['name'] as $key => $additional_image) {
+            $target_file = $target_directory . basename($_FILES['images']['name'][$key]);
+            $uploadOk = 1;
+            $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+
+            $check = getimagesize($_FILES['images']['tmp_name'][$key]);
+            if ($check === false) {
+                $image_err = "File is not an image.";
+                $uploadOk = 0;
+            }
+
+            if (file_exists($target_file)) {
+                $image_err = "Sorry, file already exists.";
+                $uploadOk = 0;
+            }
+
+            if ($_FILES['images']['size'][$key] > 50000000) {
+                $image_err = "Sorry, your file is too large.";
+                $uploadOk = 0;
+            }
+
+            $allowed_formats = array("jpg", "jpeg", "png", "gif");
+            if (!in_array($imageFileType, $allowed_formats)) {
+                $image_err = "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+                $uploadOk = 0;
+            }
+
+            if ($uploadOk == 0) {
+                echo "Sorry, your file was not uploaded.";
+            } else {
+                if (move_uploaded_file($_FILES['images']['tmp_name'][$key], $target_file)) {
+                    $images[] = $target_file;
+                } else {
+                    echo "Sorry, there was an error uploading your file.";
+                }
+            }
+        }
+    }
     // Check input errors before inserting into the database
     if (empty($name_err) && empty($address_err) && empty($price_err) && empty($type_err) && empty($image_err) && empty($body_err)) {
         // Prepare an update statement
@@ -175,6 +228,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Attempt to execute the prepared statement
             if (mysqli_stmt_execute($stmt)) {
                 // Posts updated successfully. Redirect to the landing page
+                deleteOldImages($link, $id);
+                
+                $sql_images = "INSERT INTO post_images (post_id, image_path) VALUES (?, ?)";
+                $stmt_images = mysqli_prepare($link, $sql_images);
+
+                foreach ($images as $img) {
+                    mysqli_stmt_bind_param($stmt_images, "is", $id, $img);
+                    mysqli_stmt_execute($stmt_images);
+                }
+
+                mysqli_stmt_close($stmt_images);
                 header("location: dashboard.php");
                 exit();
             } else {
@@ -403,6 +467,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <input type="file" name="image" class="form-control <?php echo (!empty($image_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $image; ?>">
                             <span class="invalid-feedback"><?php echo $image_err;?></span>
                         </div>
+                        <div class="form-group">
+                            <label>Additional Images</label>
+                            <input type="file" name="images[]" class="form-control" multiple>
+                        </div>
+                        <input type="hidden" name="old_image" value="<?php echo htmlspecialchars($old_image); ?>">
                         <div class="form-group">
                             <label>For Sale</label>
                             <input type="checkbox" name="for_sale" <?php echo ($category === 'For Sale') ? 'checked' : ''; ?>>

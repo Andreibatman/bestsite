@@ -77,7 +77,7 @@ if (isset($_GET["id"]) && !empty(trim($_GET["id"]))) {
     }
 
     // Close statement
-    mysqli_stmt_close($stmt);
+    //mysqli_stmt_close($stmt);
 
     // Close connection
 } else {
@@ -86,6 +86,25 @@ if (isset($_GET["id"]) && !empty(trim($_GET["id"]))) {
 }
 ?>
 <!doctype html>
+<style>
+  .enlarged-view {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Ensure it's on top of other elements */
+}
+
+.enlarged-image {
+    max-width: 90%;
+    max-height: 90%;
+}
+</style>
 <html lang="en">
 
   <head>
@@ -112,7 +131,7 @@ if (isset($_GET["id"]) && !empty(trim($_GET["id"]))) {
 
   <body data-spy="scroll" data-target=".site-navbar-target" data-offset="300">
 
-    
+  <div class="enlarged-view"></div>
     <div class="site-wrap" id="home-section">
 
       <div class="site-mobile-menu site-navbar-target">
@@ -183,7 +202,61 @@ if (isset($_GET["id"]) && !empty(trim($_GET["id"]))) {
       </div>
     </div>
     
+    <?php
+    // Include config file
+    require_once "php/config.php";
 
+    // Check if the 'id' parameter is present in the URL
+    if (isset($_GET["id"]) && !empty(trim($_GET["id"]))) {
+        // Get the post ID from the URL
+        $post_id = trim($_GET["id"]);
+    
+        // Prepare a select statement to fetch images for the given post ID
+        $sql = "SELECT image_path FROM post_images WHERE post_id = ?";
+
+        if ($stmt = mysqli_prepare($link, $sql)) {
+            // Bind variables to the prepared statement as parameters
+            mysqli_stmt_bind_param($stmt, "i", $post_id);
+        
+            // Attempt to execute the prepared statement
+            if (mysqli_stmt_execute($stmt)) {
+                $result = mysqli_stmt_get_result($stmt);
+            
+                // Check if there are images for the post
+                if (mysqli_num_rows($result) > 0) {
+                    // Fetch image paths and store them in an array
+                    $images = [];
+                    while ($row = mysqli_fetch_assoc($result)) {
+                        $images[] = $row["image_path"];
+                    }
+                    echo '<div class="site-section bg-black block-14">
+                          <div class="container">';
+                    // Output the carousel HTML with dynamic image sources
+                    echo '<div class="owl-carousel nonloop-block-14">';
+                    foreach ($images as $image) {
+                        echo '<div class="media-38289">
+                                <a href="#" class="d-block enlarge-image" data-image="php/'.$image.'"><img src="php/'.$image.'" alt="Image" class="img-fluid"></a>
+                                
+                              </div>';
+                    }
+                    echo '</div></div></div>';
+                } else {
+                    echo "No images found for the post.";
+                }
+            } else {
+                echo "Oops! Something went wrong. Please try again later.";
+            }
+
+            // Close the statement
+            //mysqli_stmt_close($stmt);
+        }
+
+        // Close the connection
+        //mysqli_close($link);
+    } else {
+        echo "Invalid request. Please provide a valid post ID.";
+    }
+    ?>
     
     <div class="site-section">
       <div class="container">
@@ -356,7 +429,7 @@ if (isset($_GET["id"]) && !empty(trim($_GET["id"]))) {
         </div>
       </div>
     </footer>
-
+    
     </div>
 
     <script src="js/jquery-3.3.1.min.js"></script>
@@ -374,7 +447,38 @@ if (isset($_GET["id"]) && !empty(trim($_GET["id"]))) {
     <script src="js/aos.js"></script>
 
     <script src="js/main.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+          var enlargeImageLinks = document.querySelectorAll('.enlarge-image');
+          var enlargedView = document.querySelector('.enlarged-view');
 
+          enlargeImageLinks.forEach(function (link) {
+              link.addEventListener('click', function (e) {
+                  e.preventDefault();
+
+                  // Get the image source from the data attribute
+                  var imageUrl = link.getAttribute('data-image');
+
+                  // Set the image source for the enlarged view
+                  enlargedView.innerHTML = '<img src="' + imageUrl + '" alt="Enlarged Image" class="enlarged-image">';
+
+                  // Toggle the visibility of the enlarged view
+                  enlargedView.style.display = 'flex';
+              });
+          });
+
+          // Click event to close the enlarged view when clicked outside the image
+          enlargedView.addEventListener('click', function () {
+              this.style.display = 'none';
+          });
+
+          // Prevent the enlarged view from closing when clicking on the image itself
+          enlargedView.querySelector('.enlarged-image').addEventListener('click', function (e) {
+              e.stopPropagation();
+          });
+      });
+  </script>
   </body>
 
 </html>

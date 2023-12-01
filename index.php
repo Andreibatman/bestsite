@@ -75,28 +75,63 @@
         </div>
 
       </header>
+      <?php
+    // Include config file
+    require_once "php/config.php";
 
+    // Query to fetch a random post from the database
+    $sql = "SELECT * FROM posts ORDER BY RAND() LIMIT 1";
+    $result = mysqli_query($link, $sql);
+
+    // Check if the query was successful
+    if ($result && mysqli_num_rows($result) > 0) {
+        $row = mysqli_fetch_assoc($result);
+    
+        // Assign fetched data to variables
+        $price = $row['price'];
+        $name = $row['name'];
+        $address = $row['address'];
+        $sq_ft = $row['surface'];
+        $bedrooms = $row['bedrooms'];
+        $bathrooms = $row['bathrooms'];
+        $image = $row['image'];
+    
+        // Close the result set
+        mysqli_free_result($result);
+    } else {
+        // Handle error or set default values
+        $price = "$1,570,000";
+        $name = "Beautiful House In Australia";
+        $address = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
+        $sq_ft = "2911 Sq Ft.";
+        $bedrooms = "2";
+        $bathrooms = "2";
+        $image = "uploads/background.PNG";
+    }
+
+    // Close connection
+    
+    ?>
     <div class="ftco-blocks-cover-1">
-      <div class="site-section-cover overlay" data-stellar-background-ratio="0.5" style="background-image: url('images/hero_1.jpg')">
+    <div class="site-section-cover overlay" data-stellar-background-ratio="0.5" style='background-image: url("php/<?php echo $image; ?>")'>
         <div class="container">
-          <div class="row align-items-center justify-content-center text-center">
-            <div class="col-md-7">
-              <span class="h4 text-primary mb-4 d-block">$1,570,000</span>
-              <h1 class="mb-2">Beautiful House In Australia</h1>
-              <p class="text-center mb-5"><span class="small address d-flex align-items-center justify-content-center"> <span class="icon-room mr-3 text-primary"></span> <span>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</span></span></p>
-            
-                <div class="d-flex media-38289 justify-content-around mb-5">
-                  <div class="sq d-flex align-items-center"><span class="wrap-icon icon-fullscreen
-"></span> <span>2911 Sq Ft.</span></div>
-                  <div class="bed d-flex align-items-center"><span class="wrap-icon icon-bed"></span> <span>2</span></div>
-                  <div class="bath d-flex align-items-center"><span class="wrap-icon icon-bath"></span> <span>2</span></div>
+            <div class="row align-items-center justify-content-center text-center">
+                <div class="col-md-7">
+                    <span class="h4 text-primary mb-4 d-block"><?php echo $price; ?></span>
+                    <h1 class="mb-2"><?php echo $name; ?></h1>
+                    <p class="text-center mb-5"><span class="small address d-flex align-items-center justify-content-center"> <span class="icon-room mr-3 text-primary"></span> <span><?php echo $address; ?></span></span></p>
+
+                    <div class="d-flex media-38289 justify-content-around mb-5">
+                        <div class="sq d-flex align-items-center"><span class="wrap-icon icon-fullscreen"></span> <span><?php echo $sq_ft; ?> Sq Ft.</span></div>
+                        <div class="bed d-flex align-items-center"><span class="wrap-icon icon-bed"></span> <span><?php echo $bedrooms; ?></span></div>
+                        <div class="bath d-flex align-items-center"><span class="wrap-icon icon-bath"></span> <span><?php echo $bathrooms; ?></span></div>
+                    </div>
+                    <p><a href="property-single.php?id=<?php echo $row['id']; ?>" class="btn btn-primary text-white px-4 py-3">Learn More</a></p>
                 </div>
-              <p><a href="#" class="btn btn-primary text-white px-4 py-3">Learn More</a></p>
             </div>
-          </div>
         </div>
-      </div>
     </div>
+</div>
     
     
 
