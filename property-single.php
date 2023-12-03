@@ -126,7 +126,11 @@ if (isset($_GET["id"]) && !empty(trim($_GET["id"]))) {
 
     <!-- MAIN CSS -->
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/owl.carousel@2.3.4/dist/assets/owl.carousel.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/owl.carousel@2.3.4/dist/assets/owl.theme.default.min.css">
 
+    <!-- Owl Carousel JS -->
+    <script src="https://cdn.jsdelivr.net/npm/owl.carousel@2.3.4/dist/owl.carousel.min.js"></script>
   </head>
 
   <body data-spy="scroll" data-target=".site-navbar-target" data-offset="300">
@@ -229,10 +233,10 @@ if (isset($_GET["id"]) && !empty(trim($_GET["id"]))) {
                     while ($row = mysqli_fetch_assoc($result)) {
                         $images[] = $row["image_path"];
                     }
-                    echo '<div class="site-section bg-black block-14">
+                    echo '<div class="site-section bg-black block-14 ">
                           <div class="container">';
                     // Output the carousel HTML with dynamic image sources
-                    echo '<div class="owl-carousel nonloop-block-14">';
+                    echo '<div class="owl-carousel nonloop-block-14 owl-nav">';
                     foreach ($images as $image) {
                         echo '<div class="media-38289">
                                 <a href="#" class="d-block enlarge-image" data-image="php/'.$image.'"><img src="php/'.$image.'" alt="Image" class="img-fluid"></a>
@@ -449,36 +453,46 @@ if (isset($_GET["id"]) && !empty(trim($_GET["id"]))) {
     <script src="js/main.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script>
-      document.addEventListener('DOMContentLoaded', function () {
-          var enlargeImageLinks = document.querySelectorAll('.enlarge-image');
-          var enlargedView = document.querySelector('.enlarged-view');
+  document.addEventListener('DOMContentLoaded', function () {
+      var enlargeImageLinks = document.querySelectorAll('.enlarge-image');
+      var enlargedView = document.querySelector('.enlarged-view');
 
-          enlargeImageLinks.forEach(function (link) {
-              link.addEventListener('click', function (e) {
-                  e.preventDefault();
+      enlargeImageLinks.forEach(function (link) {
+          link.addEventListener('click', function (e) {
+              e.preventDefault();
 
-                  // Get the image source from the data attribute
-                  var imageUrl = link.getAttribute('data-image');
+              // Get the image source from the data attribute
+              var imageUrl = link.getAttribute('data-image');
 
-                  // Set the image source for the enlarged view
-                  enlargedView.innerHTML = '<img src="' + imageUrl + '" alt="Enlarged Image" class="enlarged-image">';
+              // Set the image source for the enlarged view
+              enlargedView.innerHTML = '<img src="' + imageUrl + '" alt="Enlarged Image" class="enlarged-image">';
 
-                  // Toggle the visibility of the enlarged view
-                  enlargedView.style.display = 'flex';
+              // Toggle the visibility of the enlarged view
+              enlargedView.style.display = 'flex';
+
+              // Initialize Owl Carousel for the enlarged view
+              $('.enlarged-view .owl-carousel').owlCarousel({
+                  items: 1,
+                  nav: true,
+                  loop: true,
+                  navText: ['<span style="z-index:10001" class="owl-nav enabled icon-arrow-left"></span>', '<span style="z-index:10001" class="owl-nav enabled icon-arrow-right"></span>'], // Customize navigation arrows
               });
           });
-
-          // Click event to close the enlarged view when clicked outside the image
-          enlargedView.addEventListener('click', function () {
-              this.style.display = 'none';
-          });
-
-          // Prevent the enlarged view from closing when clicking on the image itself
-          enlargedView.querySelector('.enlarged-image').addEventListener('click', function (e) {
-              e.stopPropagation();
-          });
       });
-  </script>
+
+      // Click event to close the enlarged view when clicked outside the image
+      enlargedView.addEventListener('click', function () {
+          this.style.display = 'none';
+      });
+
+      // Prevent the enlarged view from closing when clicking on the image itself
+      enlargedView.querySelector('.enlarged-image').addEventListener('click', function (e) {
+          e.stopPropagation();
+      });
+  });
+</script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/owl.carousel@2.3.4/dist/owl.carousel.min.js"></script>
   </body>
 
 </html>
